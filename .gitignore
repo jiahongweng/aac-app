@@ -1,0 +1,13 @@
+*.log
+node_modules
+.nyc_output
+
+# OSX
+.DS_Store
+.DS_Store?
+
+# build files
+build
+
+server/config/db.json
+.env
