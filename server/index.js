@@ -1,26 +1,17 @@
 import config from 'dotenv';
-import express from 'express';
-import bodyParser from 'body-parser';
-import userRoutes from './routes/UserRoutes';
+import app from './config/express';
 
 config.config();
 
-const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
 const port = process.env.PORT || 8000;
-
-app.use('/api/v1/users', userRoutes);
-
-// when a random route is inputed
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to this API.',
-}));
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
 app.listen(port, () => {
-  console.log(`Server is running on PORT ${port}`);
+  console.log(`Server is running on PORT ${port} (${env})`);
 });
 
+/**
+* Exports express
+* @public
+*/
 export default app;
