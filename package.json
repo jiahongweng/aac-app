@@ -4,19 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node ./server/index.js",
-    "test": "export NODE_ENV=test &&  sequelize db:migrate:undo:all  && sequelize db:migrate  && nyc --require @babel/register  mocha ./server/_test/ --recursive --exit",
-    "build": "rm -rf ./build && babel -d ./build ./server -s",
-    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
-    "coveralls-coverage": "coveralls < lcov.info",
-    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
-    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage",
+    "start": "npm-run-all -p watch-css start-js",
+    "start-js": "concurrently 'npm run server' 'npm run client'",
+    "client": "react-scripts start",
+    "build": "npm-run-all build-css build-js",
+    "test-client": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "build-js": "react-scripts build",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "server": "nodemon --exec babel-node ./server/index.js",
+    "test-server": "export NODE_ENV=test &&  sequelize db:migrate:undo:all  && sequelize db:migrate  && nyc --require @babel/register  mocha ./server/_test/ --recursive --exit",
+    "build-server": "rm -rf ./build && babel -d ./build ./server -s",
     "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -28,11 +36,16 @@
     "http-status": "^1.4.2",
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
+    "node-sass-chokidar": "^1.4.0",
     "nodemon": "^2.0.3",
+    "npm-run-all": "^4.1.5",
     "passport": "^0.4.1",
     "path": "^0.12.7",
     "pg": "^8.0.2",
     "pg-hstore": "^2.3.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
     "sequelize": "^5.21.6"
   },
   "devDependencies": {
@@ -44,10 +57,23 @@
     "@babel/register": "^7.9.0",
     "@babel/runtime": "^7.9.2",
     "babel-loader": "^8.1.0",
+    "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "mocha": "^7.1.1",
     "nyc": "^15.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
