@@ -1,12 +1,22 @@
 import { Router } from 'express';
 import UserController from '../../controllers/UserController';
+import {
+  checkRole,
+  checkSelfOrAdmin,
+} from '../../middlewares/permission.middleware';
+import { ROLES } from '../../utils/constants';
 
 const router = Router();
 
-router.get('/', UserController.getallUsers);
-router.post('/', UserController.addUser);
-router.get('/:id', UserController.getUser);
-router.put('/:id', UserController.updateUser);
-router.delete('/:id', UserController.deleteUser);
+router
+  .route('/')
+  .get(checkRole([ROLES.ADMIN]), UserController.getAllUsers)
+  .post(checkRole([ROLES.ADMIN]), UserController.addUser);
+
+router
+  .route('/:id')
+  .get(checkSelfOrAdmin, UserController.getUser)
+  .put(checkSelfOrAdmin, UserController.updateUser)
+  .delete(checkSelfOrAdmin, UserController.deleteUser);
 
 export default router;

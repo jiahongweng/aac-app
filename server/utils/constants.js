@@ -1,8 +1,8 @@
 const BCRYPT_SALT_ROUNDS = 10;
 
 const ROLES = {
-  ADMIN: 'Admin',
-  CLIENT: 'Client',
+  ADMIN: 2,
+  CLIENT: 1,
 };
 const ERROR_MESSAGES = {
   API_NOT_FOUND: 'API not found.',

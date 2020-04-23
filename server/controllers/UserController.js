@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
 import UserService from '../services/UserService';
 import Util from '../utils/Utils';
-import { userWithoutPassword } from '../utils/misc';
+import { userWithoutPassword, parseRequestQuery } from '../utils/misc';
 
 const util = new Util();
 
 class UserController {
-  static async getallUsers(req, res) {
+  static async getAllUsers(req, res) {
     try {
       const allUsers = await UserService.getAllUsers();
       util.setSuccess(
