@@ -10,7 +10,12 @@ const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
  */
 exports.converter = (err, req, res, next) => {
   if (!(err instanceof APIError)) {
-    const apiError = new APIError(err.message, err.status, err.isPublic, err.errors);
+    const apiError = new APIError(
+      err.message,
+      err.status,
+      err.isPublic,
+      err.errors,
+    );
     return next(apiError);
   }
   return next(err);
@@ -21,7 +26,11 @@ exports.converter = (err, req, res, next) => {
  * @public
  */
 exports.notFound = (req, res, next) => {
-  const err = new APIError(ERROR_MESSAGES.API_NOT_FOUND, httpStatus.NOT_FOUND, true);
+  const err = new APIError(
+    ERROR_MESSAGES.API_NOT_FOUND,
+    httpStatus.NOT_FOUND,
+    true,
+  );
 
   return next(err);
 };
@@ -30,7 +39,9 @@ exports.notFound = (req, res, next) => {
  * Error handler. Send stacktrace only during development
  * @public
  */
-exports.handler = (err, req, res, next) => { // eslint-disable-line consistent-return
+// eslint-disable-next-line consistent-return
+exports.handler = (err, req, res, next) => {
+  // eslint-disable-line consistent-return
   if (res.headersSent) {
     return next(err);
   }
@@ -38,6 +49,6 @@ exports.handler = (err, req, res, next) => { // eslint-disable-line consistent-r
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
     ...(env === 'development' ? { stack: err.stack } : {}),
-    ...(err.errors ? { errors: err.errors } : {})
+    ...(err.errors ? { errors: err.errors } : {}),
   });
 };

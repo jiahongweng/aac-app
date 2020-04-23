@@ -1,26 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from 'react';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import history from 'utils/history';
+import configureStore from './configureStore';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = React.lazy(() =>
+  import(/* webpackChunkName: "App" */ 'containers/App'),
+);
+const initialState = {};
+const store = configureStore(initialState, history);
 
-export default App;
+export default () => (
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <Suspense fallback={<div className="loading" />}>
+        <App />
+      </Suspense>
+    </ConnectedRouter>
+  </Provider>
+);

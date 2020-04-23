@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 module.exports = {
-
   // If using online database
   // development: {
   //   use_env_variable: 'DATABASE_URL'
@@ -12,7 +11,7 @@ module.exports = {
     username: 'aac',
     password: null,
     host: '127.0.0.1',
-    dialect: 'postgres'
+    dialect: 'postgres',
   },
 
   test: {
@@ -20,7 +19,7 @@ module.exports = {
     username: 'aac',
     password: null,
     host: '127.0.0.1',
-    dialect: 'postgres'
+    dialect: 'postgres',
   },
 
   production: {
@@ -28,6 +27,6 @@ module.exports = {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     host: process.env.DB_HOST,
-    dialect: 'postgres'
-  }
+    dialect: 'postgres',
+  },
 };

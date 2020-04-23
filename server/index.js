@@ -11,7 +11,7 @@ app.listen(port, () => {
 });
 
 /**
-* Exports express
-* @public
-*/
+ * Exports express
+ * @public
+ */
 export default app;

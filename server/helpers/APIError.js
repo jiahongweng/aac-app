@@ -35,7 +35,7 @@ class APIError extends ExtendableError {
     message,
     status = httpStatus.INTERNAL_SERVER_ERROR,
     isPublic = false,
-    errors
+    errors,
   ) {
     super(message, status, isPublic, errors);
   }

@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import UserService from '../services/UserService';
 import Util from '../utils/Utils';
+import { userWithoutPassword } from '../utils/misc';
 
 const util = new Util();
 
@@ -8,7 +9,11 @@ class UserController {
   static async getallUsers(req, res) {
     try {
       const allUsers = await UserService.getAllUsers();
-      util.setSuccess(httpStatus.OK, 'Users retrieved', allUsers);
+      util.setSuccess(
+        httpStatus.OK,
+        'Users retrieved',
+        allUsers.map((user) => userWithoutPassword(user)),
+      );
       return util.send(res);
     } catch (error) {
       util.setError(httpStatus.BAD_REQUEST, error);
@@ -17,15 +22,23 @@ class UserController {
   }
 
   static async addUser(req, res) {
-    console.log(req.body);
-    if (!req.body.firstName || !req.body.firstName || !req.body.email || !req.body.phone) {
+    if (
+      !req.body.firstName ||
+      !req.body.firstName ||
+      !req.body.email ||
+      !req.body.password
+    ) {
       util.setError(httpStatus.BAD_REQUEST, 'Please provide complete details');
       return util.send(res);
     }
     const newUser = req.body;
     try {
       const createdUser = await UserService.addUser(newUser);
-      util.setSuccess(httpStatus.CREATED, 'User Added!', createdUser);
+      util.setSuccess(
+        httpStatus.CREATED,
+        'User Added!',
+        userWithoutPassword(createdUser),
+      );
       return util.send(res);
     } catch (error) {
       util.setError(httpStatus.BAD_REQUEST, error.message);
@@ -37,15 +50,26 @@ class UserController {
     const alteredUser = req.body;
     const { id } = req.params;
     if (!Number(id)) {
-      util.setError(httpStatus.NOT_ACCEPTABLE, 'Please input a valid numeric value');
+      util.setError(
+        httpStatus.NOT_ACCEPTABLE,
+        'Please input a valid numeric value',
+      );
       return util.send(res);
     }
     try {
-      const updatedUser = await UserService.updateUser(id, alteredUser);
+      let updatedUser = await UserService.updateUser(id, alteredUser);
       if (!updatedUser) {
-        util.setError(httpStatus.NOT_FOUND, `Cannot find user with the id: ${id}`);
+        util.setError(
+          httpStatus.NOT_FOUND,
+          `Cannot find user with the id: ${id}`,
+        );
       } else {
-        util.setSuccess(httpStatus.OK, 'User updated', updatedUser);
+        updatedUser = await UserService.getUser(id);
+        util.setSuccess(
+          httpStatus.OK,
+          'User updated',
+          userWithoutPassword(updatedUser),
+        );
       }
       return util.send(res);
     } catch (error) {
@@ -58,7 +82,10 @@ class UserController {
     const { id } = req.params;
 
     if (!Number(id)) {
-      util.setError(httpStatus.NOT_ACCEPTABLE, 'Please input a valid numeric value');
+      util.setError(
+        httpStatus.NOT_ACCEPTABLE,
+        'Please input a valid numeric value',
+      );
       return util.send(res);
     }
 
@@ -66,9 +93,16 @@ class UserController {
       const theUser = await UserService.getUser(id);
 
       if (!theUser) {
-        util.setError(httpStatus.NOT_FOUND, `Cannot find user with the id ${id}`);
+        util.setError(
+          httpStatus.NOT_FOUND,
+          `Cannot find user with the id ${id}`,
+        );
       } else {
-        util.setSuccess(httpStatus.OK, 'Found User', theUser);
+        util.setSuccess(
+          httpStatus.OK,
+          'Found User',
+          userWithoutPassword(theUser),
+        );
       }
       return util.send(res);
     } catch (error) {
@@ -81,7 +115,10 @@ class UserController {
     const { id } = req.params;
 
     if (!Number(id)) {
-      util.setError(httpStatus.NOT_ACCEPTABLE, 'Please provide a numeric value');
+      util.setError(
+        httpStatus.NOT_ACCEPTABLE,
+        'Please provide a numeric value',
+      );
       return util.send(res);
     }
 
@@ -91,7 +128,10 @@ class UserController {
       if (userToDelete) {
         util.setSuccess(httpStatus.OK, 'User deleted');
       } else {
-        util.setError(httpStatus.NOT_FOUND, `User with the id ${id} cannot be found`);
+        util.setError(
+          httpStatus.NOT_FOUND,
+          `User with the id ${id} cannot be found`,
+        );
       }
       return util.send(res);
     } catch (error) {

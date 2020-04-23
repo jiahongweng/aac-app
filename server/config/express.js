@@ -9,11 +9,12 @@ import passport from 'passport';
 import routes from '../routes/v1';
 import errorHandler from '../middlewares/error.middleware';
 
+require('./passport');
 
 /**
-* Express instance
-* @public
-*/
+ * Express instance
+ * @public
+ */
 const app = express();
 
 // request logging. dev: console | production: file
