@@ -1,4 +1,5 @@
 const BCRYPT_SALT_ROUNDS = 10;
+const PAGE_PER_NUM = 10;
 
 const ROLES = {
   ADMIN: 2,
@@ -14,4 +15,4 @@ const ERROR_MESSAGES = {
   USER_NOT_ALLOWED: 'Current user is not allowed to do this operation.',
 };
 
-export { BCRYPT_SALT_ROUNDS, ROLES, ERROR_MESSAGES };
+export { BCRYPT_SALT_ROUNDS, PAGE_PER_NUM, ROLES, ERROR_MESSAGES };

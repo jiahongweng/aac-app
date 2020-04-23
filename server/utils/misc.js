@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable prefer-const */
 import { omit } from 'lodash';
+import { PAGE_PER_NUM } from './constants';
 
 const userWithoutPassword = (user) => omit(user.dataValues, ['password']);
 
@@ -26,7 +27,7 @@ const parseRequestQuery = (requestQuery) => {
   let numRoomsMax = parseInt(numRoomsMaxStr, 10);
 
   if (isNaN(page)) page = 0;
-  if (isNaN(limit)) limit = 10;
+  if (isNaN(limit)) limit = PAGE_PER_NUM;
   if (!isNaN(sizeMin)) query.floorAreaSize = { $gte: sizeMin };
   if (!isNaN(sizeMax))
     query.floorAreaSize = { ...query.floorAreaSize, $lte: sizeMax };

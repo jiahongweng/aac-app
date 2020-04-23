@@ -2,18 +2,30 @@ import httpStatus from 'http-status';
 import UserService from '../services/UserService';
 import Util from '../utils/Utils';
 import { userWithoutPassword, parseRequestQuery } from '../utils/misc';
+import { PAGE_PER_NUM } from '../utils/constants';
 
 const util = new Util();
 
 class UserController {
   static async getAllUsers(req, res) {
     try {
-      const allUsers = await UserService.getAllUsers();
-      util.setSuccess(
-        httpStatus.OK,
-        'Users retrieved',
-        allUsers.map((user) => userWithoutPassword(user)),
-      );
+      const { page = 0, limit = PAGE_PER_NUM } = parseRequestQuery(req.query);
+      const { order, orderBy } = req.query;
+      const {
+        count: totalCount,
+        rows: allUsers,
+      } = await UserService.getAllUsers({
+        order,
+        orderBy,
+        page,
+        limit,
+      });
+      util.setSuccess(httpStatus.OK, 'Users retrieved', {
+        total: totalCount,
+        page,
+        limit,
+        users: allUsers.map((user) => userWithoutPassword(user)),
+      });
       return util.send(res);
     } catch (error) {
       util.setError(httpStatus.BAD_REQUEST, error);

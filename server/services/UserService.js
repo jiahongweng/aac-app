@@ -2,13 +2,20 @@
 import database from '../src/models';
 
 class UserService {
-  static async getAllUsers() {
+  static async getAllUsers({ order, orderBy, page, limit }) {
     try {
-      return await database.User.findAll({
+      const orders = [];
+      if ((order === 'asc' || order === 'desc') && orderBy) {
+        orders.push([orderBy, order]);
+      }
+      return await database.User.findAndCountAll({
         where: {
           role: 1,
           status: 1,
         },
+        order: orders,
+        limit,
+        offset: page * limit,
       });
     } catch (error) {
       throw error;
