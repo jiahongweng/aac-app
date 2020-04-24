@@ -2,6 +2,11 @@ export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
+export const ROLES = {
+  ADMIN: 2,
+  CLIENT: 1,
+};
+
 export const ERROR_MESSAGES = {
   NOT_FOUND_PAGE_TITILE: 'Ooops... looks like an error occurred!',
   NOT_FOUND_PAGE_CONTENT:

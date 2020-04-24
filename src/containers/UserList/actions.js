@@ -31,10 +31,10 @@ export function fetchUsers({ order, orderBy, page, limit }) {
  *
  * @return {object} An action object with a type of FETCH_USERS_SUCCESS passing the users
  */
-export function fetchUsersSucceeded({ result }) {
+export function fetchUsersSucceeded({ data }) {
   return {
     type: FETCH_USERS_SUCCESS,
-    payload: { result },
+    payload: { result: data },
   };
 }
 

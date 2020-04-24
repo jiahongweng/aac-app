@@ -24,7 +24,9 @@ export const MENU_ITEMS = [
 ];
 
 export const BREADCRUMB_ITEMS = {
+  'breadcrumb.home': 'Home',
   'breadcrumb.dashboard': 'Dashboard',
+  'breadcrumb.users': 'Users',
 };
 
 export const MENU_SET_CLASSNAMES = 'Menu/SET_CLASSNAMES';

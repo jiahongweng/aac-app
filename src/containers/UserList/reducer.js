@@ -17,6 +17,8 @@ export const initialState = {
     error: undefined,
     data: undefined,
     total: 0,
+    page: 0,
+    limit: 0,
   },
 };
 
@@ -34,6 +36,8 @@ function userListReducer(state = initialState, action) {
           error: false,
           data: [],
           total: 0,
+          page: 0,
+          limit: 0,
         },
       };
     case FETCH_USERS_SUCCESS:
@@ -44,6 +48,8 @@ function userListReducer(state = initialState, action) {
           error: false,
           data: result.users,
           total: result.total,
+          page: result.page,
+          limit: result.limit,
         },
       };
     case FETCH_USERS_ERROR:
@@ -54,6 +60,8 @@ function userListReducer(state = initialState, action) {
           error,
           data: [],
           total: 0,
+          page: 0,
+          limit: 0,
         },
       };
     case DELETE_USER:

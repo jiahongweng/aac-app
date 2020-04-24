@@ -65,6 +65,7 @@
     "react-redux-toastr": "^7.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-table": "^6.10.3",
     "react-transition-group": "^4.3.0",
     "reactstrap": "^8.4.1",
     "redux": "^4.0.5",

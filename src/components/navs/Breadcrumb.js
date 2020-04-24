@@ -19,6 +19,8 @@ const BreadcrumbItems = ({ match }) => {
   if (paths[paths.length - 1].indexOf(':') > -1) {
     paths = paths.filter((x) => x.indexOf(':') === -1);
   }
+  // indicate the dashboard page
+  paths.splice(0, 0, 'home');
   return (
     <>
       <Breadcrumb className="pt-0 breadcrumb-container d-none d-sm-block d-lg-inline-block">
