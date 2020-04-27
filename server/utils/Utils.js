@@ -1,37 +1,28 @@
 export default class Util {
   constructor() {
     this.statusCode = null;
-    this.type = null;
+    this.status = null;
     this.data = null;
     this.message = null;
   }
 
-  setSuccess(statusCode, message, data) {
+  setSuccess(statusCode, data) {
     this.statusCode = statusCode;
-    this.message = message;
     this.data = data;
-    this.type = 'success';
+    this.status = 'success';
   }
 
   setError(statusCode, message) {
     this.statusCode = statusCode;
     this.message = message;
-    this.type = 'error';
+    this.status = 'error';
   }
 
   send(res) {
-    const result = {
-      status: this.type,
-      message: this.message,
-      data: this.data,
-    };
-
-    if (this.type === 'success') {
-      return res.status(this.statusCode).json(result);
+    const { statusCode, status, data, message } = this;
+    if (status === 'success') {
+      return res.status(statusCode).json({ status, data });
     }
-    return res.status(this.statusCode).json({
-      status: this.type,
-      message: this.message,
-    });
+    return res.status(statusCode).json({ status, message });
   }
 }

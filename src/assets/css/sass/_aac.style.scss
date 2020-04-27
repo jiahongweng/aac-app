@@ -5857,27 +5857,10 @@ input:-webkit-autofill {
     margin-top: 0;
     margin-bottom: 0;
     height: 100%;
-    max-width: 380px;
   }
 
   .modal-content {
     min-height: 100%;
-  }
-
-  .modal-header {
-    height: $navbar-height;
-
-    @include respond-below(xl) {
-      height: $navbar-height-lg;
-    }
-
-    @include respond-below(lg) {
-      height: $navbar-height-md;
-    }
-
-    @include respond-below(sm) {
-      height: $navbar-height-xs;
-    }
   }
 
   .modal-footer {

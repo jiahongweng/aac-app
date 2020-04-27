@@ -38,10 +38,10 @@ export function* fetchUsersWatcher() {
  * DELETE_USER saga
  */
 export function* deleteUser(action) {
-  const { _id } = action.payload;
+  const { id } = action.payload;
   const options = makeJsonRequestOptions({
     method: 'DELETE',
-    requestUrlPath: `users/${_id}`,
+    requestUrlPath: `users/${id}`,
   });
 
   yield call(appApiSaga, options, [deleteUserSucceeded], deleteUserFailed);

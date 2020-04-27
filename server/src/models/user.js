@@ -46,18 +46,15 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeSave: (user, options) => {
-          return bcrypt
-            .hash(user.password, BCRYPT_SALT_ROUNDS)
-            .then((hash) => {
-              user.password = hash;
-            })
-            .catch((err) => {
-              throw new Error();
-            });
-        },
-        beforeUpdate: (user, options) => {
-          if (user.password) {
-            user.password = bcrypt.hashSync(user.password, BCRYPT_SALT_ROUNDS);
+          if (options.fields.includes('password')) {
+            return bcrypt
+              .hash(user.password, BCRYPT_SALT_ROUNDS)
+              .then((hash) => {
+                user.password = hash;
+              })
+              .catch((err) => {
+                throw new Error();
+              });
           }
         },
       },

@@ -42,7 +42,14 @@ class NotificationManager extends EventEmitter {
     this.emitChange();
   }
 
-  primary(message, title, timeOut, onClick, priority, customClassName) {
+  primary(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.PRIMARY,
       message,
@@ -54,7 +61,14 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  secondary(message, title, timeOut, onClick, priority, customClassName) {
+  secondary(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.SECONDARY,
       message,
@@ -66,7 +80,14 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  info(message, title, timeOut, onClick, priority, customClassName) {
+  info(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.INFO,
       message,
@@ -78,7 +99,14 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  success(message, title, timeOut, onClick, priority, customClassName) {
+  success(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.SUCCESS,
       message,
@@ -90,7 +118,14 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  warning(message, title, timeOut, onClick, priority, customClassName) {
+  warning(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.WARNING,
       message,
@@ -102,7 +137,14 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  error(message, title, timeOut, onClick, priority, customClassName) {
+  error(
+    message,
+    title,
+    timeOut = 3000,
+    onClick = null,
+    priority = null,
+    customClassName = '',
+  ) {
     this.create({
       type: Constants.ERROR,
       message,

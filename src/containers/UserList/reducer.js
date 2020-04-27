@@ -74,7 +74,7 @@ function userListReducer(state = initialState, action) {
         },
       };
     case DELETE_USER_SUCCESS:
-      newData = state.users.data.filter((item) => item._id !== deletedId);
+      newData = state.users.data.filter((item) => item.id !== deletedId);
       newTotal = state.users.total - 1;
 
       return {
@@ -106,7 +106,7 @@ function userListReducer(state = initialState, action) {
       };
     case DELETE_USERS_SUCCESS:
       newData = state.users.data.filter(
-        (item) => deletedIds.includes(item._id) === false,
+        (item) => deletedIds.includes(item.id) === false,
       );
       newTotal = state.users.total - deletedIds.length;
 

@@ -1,5 +1,3 @@
-import { toastr } from 'react-redux-toastr';
-import { SUCCESS_MESSAGES } from 'utils/constants';
 import {
   AUTH_TOKEN_ERROR,
   LOGOUT,
@@ -62,8 +60,6 @@ export function register({ email, password, name }) {
  * @return {object} An action object with a type of REGISTER_SUCCESS passing the user
  */
 export function registerSucceeded({ token, user }) {
-  toastr.success(SUCCESS_MESSAGES.REGISTER_SUCCESS);
-
   return {
     type: REGISTER_SUCCESS,
     payload: { token, user },
@@ -78,8 +74,6 @@ export function registerSucceeded({ token, user }) {
  * @return {object} An action object with a type of REGISTER_ERROR passing the error
  */
 export function registerFailed(error) {
-  toastr.error(error.message);
-
   return {
     type: REGISTER_ERROR,
     payload: { error },
@@ -123,8 +117,6 @@ export function loginSucceeded({ token, user }) {
  * @return {object} An action object with a type of LOGIN_ERROR passing the error
  */
 export function loginFailed(error) {
-  toastr.error(error.message);
-
   return {
     type: LOGIN_ERROR,
     payload: { error },
@@ -157,8 +149,6 @@ export function updateAccount({ _id, email, password, firstName, lastName }) {
  * @return {object} An action object with a type of UPDATE_ACCOUNT_SUCCESS passing the user
  */
 export function updateAccountSucceeded({ user }) {
-  toastr.success(SUCCESS_MESSAGES.UPDATE_ACCOUNT_SUCCESS);
-
   return {
     type: UPDATE_ACCOUNT_SUCCESS,
     payload: { user },
@@ -173,8 +163,6 @@ export function updateAccountSucceeded({ user }) {
  * @return {object} An action object with a type of UPDATE_ACCOUNT_ERROR passing the error
  */
 export function updateAccountFailed(error) {
-  toastr.error(error.message);
-
   return {
     type: UPDATE_ACCOUNT_ERROR,
     payload: { error },

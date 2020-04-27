@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
-import { fetchUsers, deleteUser, deleteUsers } from './actions';
+import { fetchUsers, deleteUser } from './actions';
 import { makeSelectUsers, makeSelectNeedRefresh } from './selectors';
 import saga from './saga';
 import UserList from './UserList';
@@ -16,9 +16,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   fetchUserList: ({ order, orderBy, page, limit }) =>
     dispatch(fetchUsers({ order, orderBy, page, limit })),
-  deleteSelectedUser: ({ _id }) => dispatch(deleteUser({ _id })),
-  deleteSelectedUsers: ({ selectedIds }) =>
-    dispatch(deleteUsers({ selectedIds })),
+  deleteSelectedUser: ({ id }) => dispatch(deleteUser({ id })),
 });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'userList', saga });
