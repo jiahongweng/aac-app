@@ -9,9 +9,11 @@ import {
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import Avatar from 'react-avatar';
 import { createStructuredSelector } from 'reselect';
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import { logout } from 'containers/App/actions';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
 import TopnavNotifications from './TopNav.Notifications';
 import { setContainerClassnames, clickOnMobileMenu } from './actions';
 import {
@@ -90,7 +92,13 @@ class TopNav extends Component {
   };
 
   render() {
-    const { containerClassnames, menuClickCount } = this.props;
+    const {
+      containerClassnames,
+      menuClickCount,
+      currentUser: {
+        data: { firstName, lastName },
+      },
+    } = this.props;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -139,9 +147,9 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+                <span className="name mr-1">{`${firstName} ${lastName}`}</span>
                 <span>
-                  <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
+                  <Avatar name={`${firstName} ${lastName}`} size="40" round />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
@@ -166,6 +174,7 @@ TopNav.propTypes = {
   containerClassnames: PropTypes.string.isRequired,
   menuClickCount: PropTypes.number.isRequired,
   selectedMenuHasSubItems: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object.isRequired,
   setContainerClassnames: PropTypes.func.isRequired,
   clickOnMobileMenu: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
@@ -175,6 +184,7 @@ const mapStateToProps = createStructuredSelector({
   containerClassnames: makeSelectContainerClassnames(),
   menuClickCount: makeSelectMenuClickCount(),
   selectedMenuHasSubItems: makeSelectMenuHasSubItems(),
+  currentUser: makeSelectCurrentUser(),
 });
 const mapDispatchToProps = (dispatch) => ({
   setContainerClassnames: (
