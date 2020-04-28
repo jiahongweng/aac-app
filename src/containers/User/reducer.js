@@ -1,4 +1,5 @@
 import {
+  INIT_USER,
   FETCH_USER,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
@@ -22,6 +23,8 @@ function userReducer(state = initialState, action) {
   const { error, data } = action.payload || {};
 
   switch (action.type) {
+    case INIT_USER:
+      return initialState;
     case FETCH_USER:
     case CREATE_USER:
       return {

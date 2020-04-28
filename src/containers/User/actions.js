@@ -1,4 +1,5 @@
 import {
+  INIT_USER,
   FETCH_USER,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
@@ -9,6 +10,17 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
 } from './constants';
+
+/**
+ * Initialize user, this action starts the request saga
+ *
+ * @return {object} An action object with a type of INIT_USER
+ */
+export function initUser() {
+  return {
+    type: INIT_USER,
+  };
+}
 
 /**
  * Fetch user, this action starts the request saga

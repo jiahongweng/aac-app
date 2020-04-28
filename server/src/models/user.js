@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { BCRYPT_SALT_ROUNDS } from '../../utils/constants';
+import { BCRYPT_SALT_ROUNDS, ERROR_MESSAGES } from '../../utils/constants';
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -14,10 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         validate: {
-          isEmail: true,
+          isEmail: {
+            msg: ERROR_MESSAGES.INVALID_EMAIL,
+          },
         },
         allowNull: false,
-        unique: true,
+        unique: {
+          msg: ERROR_MESSAGES.EMAIL_ALREADY_TAKEN,
+        },
       },
       password: {
         type: DataTypes.STRING,

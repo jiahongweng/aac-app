@@ -48,7 +48,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.PRIMARY,
@@ -67,7 +67,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.SECONDARY,
@@ -86,7 +86,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.INFO,
@@ -105,7 +105,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.SUCCESS,
@@ -124,7 +124,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.WARNING,
@@ -143,7 +143,7 @@ class NotificationManager extends EventEmitter {
     timeOut = 3000,
     onClick = null,
     priority = null,
-    customClassName = '',
+    customClassName = 'filled',
   ) {
     this.create({
       type: Constants.ERROR,

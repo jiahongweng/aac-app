@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
-import { fetchUser, createUser, updateUser } from './actions';
+import { initUser, fetchUser, createUser, updateUser } from './actions';
 import { makeSelectUser } from './selectors';
 import saga from './saga';
 import UserModal from './UserModal';
@@ -14,6 +14,7 @@ const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
 });
 const mapDispatchToProps = (dispatch) => ({
+  initUser: () => dispatch(initUser()),
   fetchSelectedUser: ({ id }) => dispatch(fetchUser({ id })),
   createNewUser: ({
     email,

@@ -28,7 +28,7 @@ class UserController {
       });
       return util.send(res);
     } catch (error) {
-      util.setError(httpStatus.BAD_REQUEST, error);
+      util.setError(httpStatus.BAD_REQUEST, error.message);
       return util.send(res);
     }
   }
@@ -52,10 +52,6 @@ class UserController {
       role,
       status,
     } = req.body;
-    if (await UserService.getUserByEmail(email)) {
-      util.setError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.EMAIL_ALREADY_TAKEN);
-      return util.send(res);
-    }
     try {
       const createdUser = await UserService.addUser({
         email,
@@ -92,12 +88,12 @@ class UserController {
           ERROR_MESSAGES.USER_NOT_FOUND_WITH_ID(id),
         );
       } else {
-        updatedUser = await UserService.getUserById(id);
+        updatedUser = await UserService.getUser(id);
         util.setSuccess(httpStatus.OK, userWithoutPassword(updatedUser));
       }
       return util.send(res);
     } catch (error) {
-      util.setError(httpStatus.NOT_FOUND, error);
+      util.setError(httpStatus.NOT_FOUND, error.message);
       return util.send(res);
     }
   }
@@ -114,7 +110,7 @@ class UserController {
     }
 
     try {
-      const theUser = await UserService.getUserById(id);
+      const theUser = await UserService.getUser(id);
 
       if (!theUser) {
         util.setError(
@@ -126,7 +122,7 @@ class UserController {
       }
       return util.send(res);
     } catch (error) {
-      util.setError(httpStatus.NOT_FOUND, error);
+      util.setError(httpStatus.NOT_FOUND, error.message);
       return util.send(res);
     }
   }
@@ -155,7 +151,7 @@ class UserController {
       }
       return util.send(res);
     } catch (error) {
-      util.setError(httpStatus.BAD_REQUEST, error);
+      util.setError(httpStatus.BAD_REQUEST, error.message);
       return util.send(res);
     }
   }

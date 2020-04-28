@@ -1,3 +1,5 @@
+export const INIT_USER = 'User/INIT_USER';
+
 export const FETCH_USER = 'User/FETCH_USER';
 export const FETCH_USER_SUCCESS = 'User/FETCH_USER_SUCCESS';
 export const FETCH_USER_ERROR = 'User/FETCH_USER_ERROR';

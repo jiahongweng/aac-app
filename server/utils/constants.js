@@ -10,8 +10,9 @@ const ERROR_MESSAGES = {
   API_NOT_FOUND: 'API not found.',
   INCOMPLETE_REQUEST: 'Please provide all required fields.',
   EMAIL_ALREADY_TAKEN:
-    'Oops. Looks like you already have an account with this email address',
+    'Oops. Looks like someone already has an account with this email address',
   INVALID_NUMERIC_VALUE: 'Please input a valid numeric value',
+  INVALID_EMAIL: 'Invalid email address.',
   INVALID_PASSWORD: 'Invalid password.',
   USER_NOT_FOUND: 'User not found.',
   USER_NOT_FOUND_WITH_ID: (userId) => `Cannot find user with the id: ${userId}`,

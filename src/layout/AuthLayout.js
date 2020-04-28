@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 
 class UserLayout extends Component {
   componentDidMount() {
+    document.body.classList.add('rounded');
     document.body.classList.add('background');
     document.body.classList.add('no-footer');
   }
 
   componentWillUnmount() {
+    document.body.classList.remove('rounded');
     document.body.classList.remove('background');
     document.body.classList.remove('no-footer');
   }

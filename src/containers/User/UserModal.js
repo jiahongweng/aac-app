@@ -34,31 +34,40 @@ class UserModal extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      isOpen: prevOpen,
       user: { loading: prevLoading },
     } = prevProps;
     const {
-      mode,
-      userId,
       isOpen,
-      fetchSelectedUser,
       user: { loading, error },
       toggle,
     } = this.props;
-    if (isOpen && error) {
-      NotificationManager.error(error.message, 'Error');
-    } else if (isOpen && !prevOpen && mode === ACTIONS.EDIT) {
-      fetchSelectedUser({ id: userId });
-    } else if (
-      isOpen &&
-      prevLoading &&
-      !loading &&
-      this.formRef.current &&
-      this.formRef.current.isSubmitting
-    ) {
-      toggle(true);
+
+    if (isOpen) {
+      if (error) {
+        NotificationManager.error(error.message, 'Error');
+      } else if (
+        prevLoading &&
+        !loading &&
+        this.formRef.current &&
+        this.formRef.current.isSubmitting
+      ) {
+        toggle(true);
+      }
     }
+    return false;
   }
+
+  onOpened = () => {
+    const { mode, fetchSelectedUser, userId } = this.props;
+    if (mode === ACTIONS.EDIT) {
+      fetchSelectedUser({ id: userId });
+    }
+  };
+
+  onClosed = () => {
+    const { initUser } = this.props;
+    initUser();
+  };
 
   formSubmit = (e) => {
     e.preventDefault();
@@ -69,13 +78,10 @@ class UserModal extends Component {
   };
 
   onSubmit = (values) => {
-    const { mode, user, createNewUser, updateSelectedUser } = this.props;
+    const { mode, userId, createNewUser, updateSelectedUser } = this.props;
     const submitValues = { ...values, role: values.role.value };
     if (mode === ACTIONS.EDIT) {
-      const {
-        data: { id },
-      } = user;
-      updateSelectedUser({ ...submitValues, id });
+      updateSelectedUser({ ...submitValues, id: userId });
     } else {
       createNewUser(submitValues);
     }
@@ -106,6 +112,8 @@ class UserModal extends Component {
         <Modal
           isOpen={isOpen}
           toggle={toggle}
+          onOpened={this.onOpened}
+          onClosed={this.onClosed}
           wrapClassName="modal-right"
           backdrop="static"
         >
@@ -252,6 +260,7 @@ class UserModal extends Component {
 
 UserModal.propTypes = {
   user: PropTypes.object.isRequired,
+  initUser: PropTypes.func.isRequired,
   fetchSelectedUser: PropTypes.func.isRequired,
   createNewUser: PropTypes.func.isRequired,
   updateSelectedUser: PropTypes.func.isRequired,
