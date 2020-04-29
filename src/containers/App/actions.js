@@ -128,15 +128,23 @@ export function loginFailed(error) {
  *
  * @return {object} An action object with a type of UPDATE_ACCOUNT
  */
-export function updateAccount({ _id, email, password, firstName, lastName }) {
+export function updateAccount({
+  id,
+  firstName,
+  lastName,
+  phone,
+  password,
+  oldPassword,
+}) {
   return {
     type: UPDATE_ACCOUNT,
     payload: {
-      _id,
-      email,
-      password,
+      id,
       firstName,
       lastName,
+      phone,
+      password,
+      oldPassword,
     },
   };
 }
@@ -148,10 +156,10 @@ export function updateAccount({ _id, email, password, firstName, lastName }) {
  *
  * @return {object} An action object with a type of UPDATE_ACCOUNT_SUCCESS passing the user
  */
-export function updateAccountSucceeded({ user }) {
+export function updateAccountSucceeded({ data }) {
   return {
     type: UPDATE_ACCOUNT_SUCCESS,
-    payload: { user },
+    payload: { user: data },
   };
 }
 

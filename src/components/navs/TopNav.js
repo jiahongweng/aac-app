@@ -6,7 +6,7 @@ import {
   DropdownToggle,
   DropdownMenu,
 } from 'reactstrap';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Avatar from 'react-avatar';
@@ -153,10 +153,12 @@ class TopNav extends Component {
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Account</DropdownItem>
-                <DropdownItem>Features</DropdownItem>
+                <DropdownItem tag={Link} to="/account">
+                  Account
+                </DropdownItem>
+                {/* <DropdownItem>Features</DropdownItem>
                 <DropdownItem>History</DropdownItem>
-                <DropdownItem>Support</DropdownItem>
+                <DropdownItem>Support</DropdownItem> */}
                 <DropdownItem divider />
                 <DropdownItem onClick={() => this.handleLogout()}>
                   Sign out

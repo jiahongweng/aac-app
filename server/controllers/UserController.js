@@ -1,4 +1,6 @@
 import httpStatus from 'http-status';
+import bcrypt from 'bcrypt';
+import { isEmpty } from 'lodash';
 import UserService from '../services/UserService';
 import Util from '../utils/Utils';
 import { userWithoutPassword, parseRequestQuery } from '../utils/misc';
@@ -79,6 +81,16 @@ class UserController {
         ERROR_MESSAGES.INVALID_NUMERIC_VALUE,
       );
       return util.send(res);
+    }
+    const { oldPassword = null } = alteredUser;
+    if (!isEmpty(oldPassword)) {
+      if (!bcrypt.compareSync(oldPassword, req.user.password)) {
+        util.setError(
+          httpStatus.NOT_ACCEPTABLE,
+          ERROR_MESSAGES.INVALID_PASSWORD,
+        );
+        return util.send(res);
+      }
     }
     try {
       let updatedUser = await UserService.updateUser(id, alteredUser);

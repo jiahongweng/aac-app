@@ -2930,6 +2930,19 @@ main {
     }
   }
 
+  &.large {
+    height: 125px;
+    font-size: 1rem;
+
+    @include respond-below(md) {
+      height: 105px;
+    }
+
+    @include respond-below(xs) {
+      height: 90px;
+    }
+  }
+
   &.small {
     height: 60px;
     font-size: 1rem;

@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { omit } from 'lodash';
+import { omit, isEmpty } from 'lodash';
 
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
@@ -27,15 +27,54 @@ const authShape = {
     .email('Invalid email address')
     .required('Please enter your email address'),
   password: Yup.string()
-    .min(3, 'Value must be longer than 3 characters')
-    .max(20, 'Value must be shorter than 20 characters')
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters')
     .required('Please enter your password'),
 };
 const profileShape = {
   firstName: Yup.string().required('Please enter your first name'),
   lastName: Yup.string().required('Please enter your last name'),
 };
+const accountPasswordShape = {
+  oldPassword: Yup.string()
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters')
+    .when(['password', 'confirmPassword'], {
+      is: (password, confirmPassword) =>
+        !isEmpty(password) || !isEmpty(confirmPassword),
+      then: Yup.string().required('Please enter your current password'),
+    }),
+  password: Yup.string()
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters')
+    .when(['oldPassword', 'confirmPassword'], {
+      is: (oldPassword, confirmPassword) =>
+        !isEmpty(oldPassword) || !isEmpty(confirmPassword),
+      then: Yup.string().required('Please enter your new password'),
+    }),
+  confirmPassword: Yup.string()
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters')
+    .when(['password', 'oldPassword'], {
+      is: (password, oldPassword) =>
+        !isEmpty(password) || !isEmpty(oldPassword),
+      then: Yup.string()
+        .required('Please enter your confirm password')
+        .oneOf([Yup.ref('password'), null], 'Password does not match'),
+    }),
+};
 export const AUTH_SCHEMA = Yup.object().shape(authShape);
+export const ACCOUNT_SCHEMA = Yup.object().shape(
+  {
+    ...profileShape,
+    ...accountPasswordShape,
+  },
+  [
+    ['password', 'confirmPassword'],
+    ['password', 'oldPassword'],
+    ['oldPassword', 'confirmPassword'],
+  ],
+);
 export const USER_SCHEMA = (action) =>
   Yup.object().shape({
     ...(action === ACTIONS.CREATE ? authShape : omit(authShape, ['password'])),

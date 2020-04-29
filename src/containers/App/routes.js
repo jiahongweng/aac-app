@@ -20,6 +20,9 @@ const Dashboard = React.lazy(() =>
 const UserList = React.lazy(() =>
   import(/* webpackChunkName: "app-userlist" */ 'containers/UserList'),
 );
+const Account = React.lazy(() =>
+  import(/* webpackChunkName: "app-account" */ 'containers/Account'),
+);
 const NotFound = React.lazy(() =>
   import(/* webpackChunkName: "app-notfound" */ 'containers/NotFound'),
 );
@@ -76,6 +79,14 @@ const routes = (isAuthenticated) => (
           exact
           path="/users"
           component={UserList}
+          layout={AppLayout}
+          shouldLoad={isAuthenticated}
+          unloadRedirectTo="/login"
+        />
+        <ControlledRoute
+          exact
+          path="/account"
+          component={Account}
           layout={AppLayout}
           shouldLoad={isAuthenticated}
           unloadRedirectTo="/login"

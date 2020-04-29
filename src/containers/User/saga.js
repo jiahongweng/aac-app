@@ -69,7 +69,7 @@ export function* updateUser(action) {
     role,
     status,
   } = action.payload;
-  const data = { email, firstName, lastName, phone, role, status };
+  const data = { email, password, firstName, lastName, phone, role, status };
   if (!isEmpty(password)) {
     data.password = password;
   }
