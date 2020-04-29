@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import authRoutes from './AuthRoutes';
 import userRoutes from './UserRoutes';
+import organizationRoutes from './OrganizationRoutes';
 
 const router = express.Router();
 
@@ -22,6 +23,15 @@ router.use(
   '/users',
   passport.authenticate('jwt', { session: false }),
   userRoutes,
+);
+
+/**
+ * Organizations
+ */
+router.use(
+  '/organizations',
+  passport.authenticate('jwt', { session: false }),
+  organizationRoutes,
 );
 
 export default router;

@@ -35,6 +35,15 @@ module.exports = {
         },
         comment: '1: Client, 2: Admin',
       },
+      organizationId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Organizations',
+          key: 'id',
+          as: 'organizationId',
+        },
+        onDelete: 'SET NULL',
+      },
       status: {
         type: Sequelize.INTEGER,
         defaultValue: 0,

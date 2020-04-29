@@ -19,6 +19,11 @@ const ERROR_MESSAGES = {
   USER_ROLE_NOT_ALLOWED:
     'Current user does not have a role to do this operation.',
   USER_NOT_ALLOWED: 'Current user is not allowed to do this operation.',
+  ORGANIZATION_NAME_ALREADY_TAKEN:
+    'Oops. Looks like someone already has an organization with this name',
+  ORGANIZATION_NOT_FOUND_WITH_ID: (organizationId) =>
+    `Cannot find organization with the id: ${organizationId}`,
+  ORGANIZATION_ALEADY_EXIST_WITH_USER: 'User has an organization already.',
 };
 
 export { BCRYPT_SALT_ROUNDS, PAGE_PER_NUM, ROLES, ERROR_MESSAGES };

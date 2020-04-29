@@ -37,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         comment: '1: Client, 2: Admin',
       },
+      organizationId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Organization',
+          key: 'id',
+          as: 'organizationId',
+        },
+      },
       status: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
@@ -69,8 +77,11 @@ module.exports = (sequelize, DataTypes) => {
   };
   // eslint-disable-next-line no-unused-vars
   User.associate = (models) => {
-    // eslint-disable-line no-unused-vars
     // associations can be defined here
+    User.belongsTo(models.Organization, {
+      foreignKey: 'organizationId',
+      onDelete: 'SET NULL',
+    });
   };
   return User;
 };
