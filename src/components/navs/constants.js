@@ -1,3 +1,5 @@
+import { ROLES } from 'utils/constants';
+
 export const DEFAULT_MENU_TYPE = 'menu-default';
 export const SUB_HIDDEN_BREAKPOINT = 1440;
 export const MENU_HIDDEN_BREAKPOINT = 768;
@@ -7,19 +9,20 @@ export const MENU_ITEMS = [
     id: 'dashboard',
     icon: 'iconsminds-home',
     label: 'Dashboard',
-    to: '/',
+    to: '/dashboard',
   },
   {
-    id: 'employees',
+    id: 'users',
     icon: 'iconsminds-business-mens',
-    label: 'Employees',
-    to: '/employees',
+    label: 'Users',
+    to: '/users',
+    permission: [ROLES.ADMIN],
   },
   {
-    id: 'projects',
-    icon: 'iconsminds-pie-chart-3',
-    label: 'Projects',
-    to: '/projects',
+    id: 'orders',
+    icon: 'iconsminds-checkout',
+    label: 'Orders',
+    to: '/orders',
   },
 ];
 

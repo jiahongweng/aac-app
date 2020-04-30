@@ -9,6 +9,7 @@ import { Nav, NavItem, Collapse } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
 import {
   setContainerClassnames,
   addContainerClassname,
@@ -356,6 +357,11 @@ class Sidebar extends Component {
       viewingParentMenu,
       collapsedMenus,
     } = this.state;
+    const {
+      currentUser: {
+        data: { role },
+      },
+    } = this.props;
 
     return (
       <div className="sidebar">
@@ -366,7 +372,10 @@ class Sidebar extends Component {
             >
               <Nav vertical className="list-unstyled">
                 {MENU_ITEMS &&
-                  MENU_ITEMS.map((item) => (
+                  MENU_ITEMS.filter(
+                    (item) =>
+                      !item.permission || item.permission.includes(role),
+                  ).map((item) => (
                     <NavItem
                       key={item.id}
                       className={classnames({
@@ -516,6 +525,7 @@ Sidebar.propTypes = {
   containerClassnames: PropTypes.string.isRequired,
   menuClickCount: PropTypes.number.isRequired,
   selectedMenuHasSubItems: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object.isRequired,
   setContainerClassnames: PropTypes.func.isRequired,
   addContainerClassname: PropTypes.func.isRequired,
   changeDefaultClassnames: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
@@ -526,6 +536,7 @@ const mapStateToProps = createStructuredSelector({
   containerClassnames: makeSelectContainerClassnames(),
   menuClickCount: makeSelectMenuClickCount(),
   selectedMenuHasSubItems: makeSelectMenuHasSubItems(),
+  currentUser: makeSelectCurrentUser(),
 });
 const mapDispatchToProps = (dispatch) => ({
   setContainerClassnames: (
