@@ -154,11 +154,11 @@ class TopNav extends Component {
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem tag={Link} to="/account">
+                <DropdownItem tag={Link} to="/settings/account">
                   Account
                 </DropdownItem>
                 {ROLES.CLIENT === role && (
-                  <DropdownItem tag={Link} to="/organization">
+                  <DropdownItem tag={Link} to="/settings/organization">
                     Organization
                   </DropdownItem>
                 )}

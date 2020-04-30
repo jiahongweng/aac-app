@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { UsaStates } from 'usa-states';
@@ -9,6 +12,10 @@ import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { FormikReactSelect } from 'components/form';
 import { Breadcrumb } from 'components/navs';
+import { updateOrganization } from 'containers/App/actions';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
+import injectSaga from 'utils/injectSaga';
+import saga from './saga';
 
 const usStates = new UsaStates();
 const stateSelectOptions = usStates.states.map((state) => ({
@@ -309,4 +316,14 @@ Organization.propTypes = {
   updateUserOrganization: PropTypes.func.isRequired,
 };
 
-export default Organization;
+const mapStateToProps = createStructuredSelector({
+  currentUser: makeSelectCurrentUser(),
+});
+const mapDispatchToProps = (dispatch) => ({
+  updateUserOrganization: ({ id, name, location, shippingAddress }) =>
+    dispatch(updateOrganization({ id, name, location, shippingAddress })),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withSaga = injectSaga({ key: 'organization', saga });
+
+export default compose(withSaga, withConnect)(Organization);

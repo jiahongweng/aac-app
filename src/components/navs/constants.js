@@ -27,6 +27,7 @@ export const BREADCRUMB_ITEMS = {
   'breadcrumb.home': 'Home',
   'breadcrumb.dashboard': 'Dashboard',
   'breadcrumb.users': 'Users',
+  'breadcrumb.settings': 'Settings',
   'breadcrumb.account': 'Account',
   'breadcrumb.organization': 'Organization',
 };

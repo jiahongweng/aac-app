@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import {
   Row,
@@ -16,6 +19,10 @@ import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
 import { ThumbnailImage } from 'components/others';
+import { updateAccount } from 'containers/App/actions';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
+import injectSaga from 'utils/injectSaga';
+import saga from './saga';
 
 class Account extends Component {
   componentDidUpdate(prevProps) {
@@ -237,4 +244,23 @@ Account.propTypes = {
   updateUserAccount: PropTypes.func.isRequired,
 };
 
-export default Account;
+const mapStateToProps = createStructuredSelector({
+  currentUser: makeSelectCurrentUser(),
+});
+const mapDispatchToProps = (dispatch) => ({
+  updateUserAccount: ({
+    id,
+    firstName,
+    lastName,
+    phone,
+    password,
+    oldPassword,
+  }) =>
+    dispatch(
+      updateAccount({ id, firstName, lastName, phone, password, oldPassword }),
+    ),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withSaga = injectSaga({ key: 'account', saga });
+
+export default compose(withSaga, withConnect)(Account);

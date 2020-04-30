@@ -21,10 +21,14 @@ const UserList = React.lazy(() =>
   import(/* webpackChunkName: "app-userlist" */ 'containers/UserList'),
 );
 const Account = React.lazy(() =>
-  import(/* webpackChunkName: "app-account" */ 'containers/Account'),
+  import(
+    /* webpackChunkName: "settings-account" */ 'containers/Settings/Account'
+  ),
 );
 const Organization = React.lazy(() =>
-  import(/* webpackChunkName: "app-organization" */ 'containers/Organization'),
+  import(
+    /* webpackChunkName: "settings-organization" */ 'containers/Settings/Organization'
+  ),
 );
 const NotFound = React.lazy(() =>
   import(/* webpackChunkName: "app-notfound" */ 'containers/NotFound'),
@@ -88,7 +92,7 @@ const routes = (isAuthenticated) => (
         />
         <ControlledRoute
           exact
-          path="/account"
+          path={['/settings', '/settings/account']}
           component={Account}
           layout={AppLayout}
           shouldLoad={isAuthenticated}
@@ -96,7 +100,7 @@ const routes = (isAuthenticated) => (
         />
         <ControlledRoute
           exact
-          path="/organization"
+          path="/settings/organization"
           component={Organization}
           layout={AppLayout}
           shouldLoad={isAuthenticated}
