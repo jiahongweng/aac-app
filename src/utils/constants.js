@@ -69,7 +69,11 @@ const addressShape = {
   state: Yup.string().required('Please enter the state'),
   zipCode: Yup.string().required('Please enter the zip code'),
 };
-export const AUTH_SCHEMA = Yup.object().shape(authShape);
+export const LOGIN_SCHEMA = Yup.object().shape(authShape);
+export const REGISTER_SCHEMA = Yup.object().shape({
+  ...profileShape,
+  ...authShape,
+});
 export const ACCOUNT_SCHEMA = Yup.object().shape(
   {
     ...profileShape,

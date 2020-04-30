@@ -1,31 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { AUTH_SCHEMA } from 'utils/constants';
+import { REGISTER_SCHEMA } from 'utils/constants';
 import { NavLink } from 'react-router-dom';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 
 class Register extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      email: '',
-      password: '',
-    };
-  }
-
   onUserRegister = (values) => {
-    const { currentUser, registerUser } = this.props;
-    if (!currentUser.loading) {
+    const {
+      currentUser: { loading },
+      registerUser,
+    } = this.props;
+    const { firstName, lastName, email, password } = values;
+    if (!loading) {
       if (
-        values.email !== '' &&
-        values.password !== '' /* && values.name !== '' */
+        !isEmpty(firstName) &&
+        !isEmpty(lastName) &&
+        !isEmpty(email) &&
+        !isEmpty(password)
       ) {
-        registerUser(values);
+        registerUser({ firstName, lastName, email, password });
       }
     }
   };
@@ -38,8 +35,12 @@ class Register extends Component {
   }
 
   render() {
-    const { name, email, password } = this.state;
-    const initialValues = { name, email, password };
+    const initialValues = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
     const { loading } = this.props.currentUser;
 
     return (
@@ -67,70 +68,92 @@ class Register extends Component {
               <CardTitle className="mb-4">Register</CardTitle>
               <Formik
                 initialValues={initialValues}
-                validationSchema={AUTH_SCHEMA}
+                validationSchema={REGISTER_SCHEMA}
                 onSubmit={this.onUserRegister}
               >
                 {() => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    {/* <FormGroup className="form-group has-float-label">
-                      <Label>Full Name</Label>
-                      <Field
-                        className="form-control"
-                        name="name"
-                        validate={this.validateName}
-                      />
-                      {errors.name && touched.name && (
-                        <div className="invalid-feedback d-block">
-                          {errors.name}
+                    <Row>
+                      <Colxx xs="12" md="6">
+                        <FormGroup className="form-group has-float-label">
+                          <Label>First Name</Label>
+                          <Field
+                            className="form-control"
+                            type="text"
+                            name="firstName"
+                          />
+                          <ErrorMessage
+                            name="firstName"
+                            className="invalid-feedback d-block"
+                            component="div"
+                          />
+                        </FormGroup>
+                      </Colxx>
+                      <Colxx xs="12" md="6">
+                        <FormGroup className="form-group has-float-label">
+                          <Label>Last Name</Label>
+                          <Field
+                            className="form-control"
+                            type="text"
+                            name="lastName"
+                          />
+                          <ErrorMessage
+                            name="lastName"
+                            className="invalid-feedback d-block"
+                            component="div"
+                          />
+                        </FormGroup>
+                      </Colxx>
+                      <Colxx xxs="12">
+                        <FormGroup className="form-group has-float-label">
+                          <Label>E-mail</Label>
+                          <Field
+                            className="form-control"
+                            type="email"
+                            name="email"
+                          />
+                          <ErrorMessage
+                            name="email"
+                            className="invalid-feedback d-block"
+                            component="div"
+                          />
+                        </FormGroup>
+                      </Colxx>
+                      <Colxx xxs="12">
+                        <FormGroup className="form-group has-float-label">
+                          <Label>Password</Label>
+                          <Field
+                            className="form-control"
+                            type="password"
+                            name="password"
+                          />
+                          <ErrorMessage
+                            name="password"
+                            className="invalid-feedback d-block"
+                            component="div"
+                          />
+                        </FormGroup>
+                      </Colxx>
+                      <Colxx xxs="12">
+                        <div className="d-flex justify-content-end align-items-center">
+                          <Button
+                            type="submit"
+                            color="primary"
+                            className={`btn-shadow btn-multiple-state ${
+                              loading ? 'show-spinner' : ''
+                            }`}
+                            size="lg"
+                          >
+                            <span className="spinner d-inline-block">
+                              <span className="bounce1" />
+                              <span className="bounce2" />
+                              <span className="bounce3" />
+                            </span>
+                            <span className="label">REGISTER</span>
+                          </Button>
                         </div>
-                      )}
-                    </FormGroup> */}
-
-                    <FormGroup className="form-group has-float-label">
-                      <Label>E-mail</Label>
-                      <Field
-                        className="form-control"
-                        type="email"
-                        name="email"
-                      />
-                      <ErrorMessage
-                        name="email"
-                        className="invalid-feedback d-block"
-                        component="div"
-                      />
-                    </FormGroup>
-
-                    <FormGroup className="form-group has-float-label">
-                      <Label>Password</Label>
-                      <Field
-                        className="form-control"
-                        type="password"
-                        name="password"
-                      />
-                      <ErrorMessage
-                        name="password"
-                        className="invalid-feedback d-block"
-                        component="div"
-                      />
-                    </FormGroup>
-
-                    <div className="d-flex justify-content-end align-items-center">
-                      <Button
-                        type="submit"
-                        color="primary"
-                        className={`btn-shadow btn-multiple-state ${
-                          loading ? 'show-spinner' : ''
-                        }`}
-                        size="lg"
-                      >
-                        <span className="spinner d-inline-block">
-                          <span className="bounce1" />
-                          <span className="bounce2" />
-                          <span className="bounce3" />
-                        </span>
-                        <span className="label">REGISTER</span>
-                      </Button>
-                    </div>
+                      </Colxx>
+                    </Row>
                   </Form>
                 )}
               </Formik>

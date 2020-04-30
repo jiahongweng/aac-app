@@ -25,6 +25,8 @@ passport.use(
       session: false,
     },
     (req, email, password, done) => {
+      const { firstName, lastName } = req.body;
+
       database.User.findOne({ where: { email } })
         .then((user) => {
           if (user) {
@@ -37,10 +39,12 @@ passport.use(
             );
           }
 
-          // eslint-disable-next-line no-shadow
-          return database.User.create({ email, password }).then((user) =>
-            done(null, user),
-          );
+          return database.User.create({
+            firstName,
+            lastName,
+            email,
+            password,
+          }).then((newUser) => done(null, newUser));
         })
         .catch((err) => done(err));
     },

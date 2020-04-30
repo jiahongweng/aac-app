@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { AUTH_SCHEMA } from 'utils/constants';
+import { LOGIN_SCHEMA } from 'utils/constants';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      email: '',
-      password: '',
-    };
-  }
-
   onUserLogin = (values) => {
-    const { currentUser, loginUser } = this.props;
-    if (!currentUser.loading) {
-      if (values.email !== '' && values.password !== '') {
-        loginUser(values);
+    const {
+      currentUser: { loading },
+      loginUser,
+    } = this.props;
+    const { email, password } = values;
+    if (!loading) {
+      if (!isEmpty(email) && !isEmpty(password)) {
+        loginUser({ email, password });
       }
     }
   };
@@ -34,8 +30,10 @@ class Login extends Component {
   }
 
   render() {
-    const { email, password } = this.state;
-    const initialValues = { email, password };
+    const initialValues = {
+      email: '',
+      password: '',
+    };
     const { loading } = this.props.currentUser;
 
     return (
@@ -63,7 +61,7 @@ class Login extends Component {
               <CardTitle className="mb-4">Login</CardTitle>
               <Formik
                 initialValues={initialValues}
-                validationSchema={AUTH_SCHEMA}
+                validationSchema={LOGIN_SCHEMA}
                 onSubmit={this.onUserLogin}
               >
                 {() => (

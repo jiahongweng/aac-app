@@ -44,13 +44,14 @@ export function logout() {
  *
  * @return {object} An action object with a type of REGISTER
  */
-export function register({ email, password, name }) {
+export function register({ firstName, lastName, email, password }) {
   return {
     type: REGISTER,
     payload: {
+      firstName,
+      lastName,
       email,
       password,
-      name,
     },
   };
 }

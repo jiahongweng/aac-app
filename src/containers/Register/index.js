@@ -11,8 +11,8 @@ const mapStateToProps = createStructuredSelector({
   currentUser: makeSelectCurrentUser(),
 });
 const mapDispatchToProps = (dispatch) => ({
-  registerUser: ({ email, password, name }) =>
-    dispatch(register({ email, password, name })),
+  registerUser: ({ firstName, lastName, email, password }) =>
+    dispatch(register({ firstName, lastName, email, password })),
 });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'register', saga });
