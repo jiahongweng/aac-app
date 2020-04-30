@@ -53,6 +53,15 @@ class UserService {
     try {
       const theUser = await database.User.findOne({
         where: { id: Number(id) },
+        include: [
+          {
+            model: database.Organization,
+            as: 'organization',
+          },
+        ],
+        attributes: {
+          exclude: ['organizationId'],
+        },
       });
 
       return theUser;

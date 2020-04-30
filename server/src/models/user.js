@@ -81,6 +81,7 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.Organization, {
       foreignKey: 'organizationId',
       onDelete: 'SET NULL',
+      as: 'organization',
     });
   };
   return User;

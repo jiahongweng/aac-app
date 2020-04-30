@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import UserService from '../services/UserService';
 import { userWithoutPassword } from '../utils/misc';
 
 dotenv.config();
@@ -18,15 +19,16 @@ exports.register = (req, res, next) => {
       return next(err);
     }
 
-    req.logIn(user, { session: false }, (error) => {
+    req.logIn(user, { session: false }, async (error) => {
       if (error) {
         return next(error);
       }
 
       const token = jwt.sign({ _id: user.id }, jwtSecret);
-      return res
-        .status(httpStatus.CREATED)
-        .json({ token, user: userWithoutPassword(user) });
+      return res.status(httpStatus.CREATED).json({
+        token,
+        user: userWithoutPassword(await UserService.getUser(user.id)),
+      });
     });
   })(req, res, next);
 };
@@ -41,15 +43,16 @@ exports.login = (req, res, next) => {
       return next(err);
     }
 
-    req.logIn(user, { session: false }, (error) => {
+    req.logIn(user, { session: false }, async (error) => {
       if (error) {
         return next(error);
       }
 
       const token = jwt.sign({ _id: user.id }, jwtSecret);
-      return res
-        .status(httpStatus.OK)
-        .json({ token, user: userWithoutPassword(user) });
+      return res.status(httpStatus.OK).json({
+        token,
+        user: userWithoutPassword(await UserService.getUser(user.id)),
+      });
     });
   })(req, res, next);
 };

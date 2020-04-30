@@ -19,4 +19,8 @@ router
   .put(checkSelfOrAdmin, UserController.updateUser)
   .delete(checkSelfOrAdmin, UserController.deleteUser);
 
+router
+  .route('/:id/organization')
+  .put(checkSelfOrAdmin, UserController.updateOrganization);
+
 export default router;

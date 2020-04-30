@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import { isEmpty } from 'lodash';
 import UserService from '../services/UserService';
+import OrganizationService from '../services/OrganizationService';
 import Util from '../utils/Utils';
 import { userWithoutPassword, parseRequestQuery } from '../utils/misc';
 import { PAGE_PER_NUM, ERROR_MESSAGES } from '../utils/constants';
@@ -160,6 +161,48 @@ class UserController {
       util.setError(httpStatus.BAD_REQUEST, error.message);
       return util.send(res);
     }
+  }
+
+  static async updateOrganization(req, res) {
+    if (!req.body.name || !req.body.location || !req.body.shippingAddress) {
+      util.setError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INCOMPLETE_REQUEST);
+      return util.send(res);
+    }
+
+    const { user, body } = req;
+    const { organizationId = null } = user;
+    const { name, location, shippingAddress } = body;
+
+    if (organizationId) {
+      try {
+        await OrganizationService.updateOrganization(organizationId, {
+          name,
+          location,
+          shippingAddress,
+        });
+      } catch (error) {
+        util.setError(httpStatus.NOT_FOUND, error.message);
+        return util.send(res);
+      }
+    } else {
+      try {
+        const createdOrganization = await OrganizationService.addOrganization({
+          name,
+          location,
+          shippingAddress,
+        });
+        await user.setOrganization(createdOrganization);
+      } catch (error) {
+        util.setError(httpStatus.NOT_FOUND, error.message);
+        return util.send(res);
+      }
+    }
+
+    util.setSuccess(
+      httpStatus.OK,
+      userWithoutPassword(await UserService.getUser(user.id)),
+    );
+    return util.send(res);
   }
 }
 

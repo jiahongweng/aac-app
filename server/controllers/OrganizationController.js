@@ -54,7 +54,7 @@ class OrganizationController {
         );
         return util.send(res);
       }
-      if (user.organizationId) {
+      if (user.organization) {
         util.setError(
           httpStatus.BAD_REQUEST,
           ERROR_MESSAGES.ORGANIZATION_ALEADY_EXIST_WITH_USER,
@@ -68,17 +68,15 @@ class OrganizationController {
           location,
           shippingAddress,
         });
-        createdOrganization.setUser(user);
+        await user.setOrganization(createdOrganization);
         util.setSuccess(httpStatus.CREATED, createdOrganization);
-        return util.send(res);
       } catch (error) {
         util.setError(httpStatus.BAD_REQUEST, error.message);
-        return util.send(res);
       }
     } catch (error) {
       util.setError(httpStatus.NOT_FOUND, error.message);
-      return util.send(res);
     }
+    return util.send(res);
   }
 
   static async updateOrganization(req, res) {
@@ -105,11 +103,10 @@ class OrganizationController {
         updatedOrganization = await OrganizationService.getOrganization(id);
         util.setSuccess(httpStatus.OK, updatedOrganization);
       }
-      return util.send(res);
     } catch (error) {
       util.setError(httpStatus.NOT_FOUND, error.message);
-      return util.send(res);
     }
+    return util.send(res);
   }
 
   static async getOrganization(req, res) {
