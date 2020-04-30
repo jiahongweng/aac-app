@@ -63,6 +63,12 @@ const accountPasswordShape = {
         .oneOf([Yup.ref('password'), null], 'Password does not match'),
     }),
 };
+const addressShape = {
+  address1: Yup.string().required('Please enter the address line'),
+  city: Yup.string().required('Please enter the city'),
+  state: Yup.string().required('Please enter the state'),
+  zipCode: Yup.string().required('Please enter the zip code'),
+};
 export const AUTH_SCHEMA = Yup.object().shape(authShape);
 export const ACCOUNT_SCHEMA = Yup.object().shape(
   {
@@ -80,6 +86,15 @@ export const USER_SCHEMA = (action) =>
     ...(action === ACTIONS.CREATE ? authShape : omit(authShape, ['password'])),
     ...profileShape,
   });
+export const ORGANIZATION_SCHEMA = Yup.object().shape({
+  name: Yup.string().required('Plaese enter the name'),
+  location: Yup.object().shape({
+    ...addressShape,
+  }),
+  shippingAddress: Yup.object().shape({
+    ...addressShape,
+  }),
+});
 
 export const ERROR_MESSAGES = {
   NOT_FOUND_PAGE_TITILE: 'Ooops... looks like an error occurred!',
@@ -90,6 +105,7 @@ export const ERROR_MESSAGES = {
 export const SUCCESS_MESSAGES = {
   REGISTER_SUCCESS: 'User registered successfully.',
   UPDATE_ACCOUNT_SUCCESS: 'User account updated successfully.',
+  UPDATE_ORGANIZATION_SUCCESS: 'Orgamization saved successfully.',
   CREATE_USER_SUCCESS: 'User created successfully.',
   UPDATE_USER_SUCCESS: 'User updated successfully.',
   DELETE_USERS_SUCCESS: 'User(s) deleted successfully.',

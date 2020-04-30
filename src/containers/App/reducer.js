@@ -19,6 +19,9 @@ import {
   UPDATE_ACCOUNT,
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_ERROR,
+  UPDATE_ORGANIZATION,
+  UPDATE_ORGANIZATION_SUCCESS,
+  UPDATE_ORGANIZATION_ERROR,
 } from './constants';
 
 const initialState = {
@@ -88,6 +91,7 @@ function appReducer(state = initialState, action) {
         },
       };
     case UPDATE_ACCOUNT:
+    case UPDATE_ORGANIZATION:
       return {
         ...state,
         currentUser: {
@@ -97,6 +101,7 @@ function appReducer(state = initialState, action) {
         },
       };
     case UPDATE_ACCOUNT_SUCCESS:
+    case UPDATE_ORGANIZATION_SUCCESS:
       saveUserInStorage(user);
 
       return {
@@ -108,6 +113,7 @@ function appReducer(state = initialState, action) {
         },
       };
     case UPDATE_ACCOUNT_ERROR:
+    case UPDATE_ORGANIZATION_ERROR:
       return {
         ...state,
         currentUser: {

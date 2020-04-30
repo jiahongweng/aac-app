@@ -14,6 +14,7 @@ import { createStructuredSelector } from 'reselect';
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import { logout } from 'containers/App/actions';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
+import { ROLES } from 'utils/constants';
 import TopnavNotifications from './TopNav.Notifications';
 import { setContainerClassnames, clickOnMobileMenu } from './actions';
 import {
@@ -96,7 +97,7 @@ class TopNav extends Component {
       containerClassnames,
       menuClickCount,
       currentUser: {
-        data: { firstName, lastName },
+        data: { firstName, lastName, role },
       },
     } = this.props;
     return (
@@ -156,6 +157,11 @@ class TopNav extends Component {
                 <DropdownItem tag={Link} to="/account">
                   Account
                 </DropdownItem>
+                {ROLES.CLIENT === role && (
+                  <DropdownItem tag={Link} to="/organization">
+                    Organization
+                  </DropdownItem>
+                )}
                 {/* <DropdownItem>Features</DropdownItem>
                 <DropdownItem>History</DropdownItem>
                 <DropdownItem>Support</DropdownItem> */}

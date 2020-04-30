@@ -10,6 +10,9 @@ import {
   UPDATE_ACCOUNT,
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_ERROR,
+  UPDATE_ORGANIZATION,
+  UPDATE_ORGANIZATION_SUCCESS,
+  UPDATE_ORGANIZATION_ERROR,
 } from './constants';
 
 /**
@@ -173,6 +176,51 @@ export function updateAccountSucceeded({ data }) {
 export function updateAccountFailed(error) {
   return {
     type: UPDATE_ACCOUNT_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Update organization, this action starts the request saga
+ *
+ * @return {object} An action object with a type of UPDATE_ORGANIZATION
+ */
+export function updateOrganization({ id, name, location, shippingAddress }) {
+  return {
+    type: UPDATE_ORGANIZATION,
+    payload: {
+      id,
+      name,
+      location,
+      shippingAddress,
+    },
+  };
+}
+
+/**
+ * Dispatched when the organization is updated by the request saga
+ *
+ * @param  {object} user user info
+ *
+ * @return {object} An action object with a type of UPDATE_ORGANIZATION_SUCCESS passing the user
+ */
+export function updateOrganizationSucceeded({ data }) {
+  return {
+    type: UPDATE_ORGANIZATION_SUCCESS,
+    payload: { user: data },
+  };
+}
+
+/**
+ * Dispatched when updating organization fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of UPDATE_ORGANIZATION_ERROR passing the error
+ */
+export function updateOrganizationFailed(error) {
+  return {
+    type: UPDATE_ORGANIZATION_ERROR,
     payload: { error },
   };
 }
