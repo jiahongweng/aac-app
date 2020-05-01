@@ -1,14 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { REGISTER_SCHEMA } from 'utils/constants';
+import { REGISTER_SCHEMA, SUCCESS_MESSAGES } from 'utils/constants';
 import { NavLink } from 'react-router-dom';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 
 class Register extends Component {
+  constructor(props) {
+    super(props);
+    this.formRef = createRef();
+  }
+
   onUserRegister = (values) => {
     const {
       currentUser: { loading },
@@ -27,10 +32,22 @@ class Register extends Component {
     }
   };
 
-  componentDidUpdate() {
-    const { error } = this.props.currentUser;
+  componentDidUpdate(prevProps) {
+    const { loading: prevLoading } = prevProps.currentUser;
+    const { error, loading } = this.props.currentUser;
     if (error) {
       NotificationManager.error(error.message, 'Signup Error');
+    } else if (
+      prevLoading &&
+      !loading &&
+      this.formRef.current &&
+      this.formRef.current.isSubmitting
+    ) {
+      NotificationManager.success(
+        SUCCESS_MESSAGES.REGISTER_SUCCESS,
+        'Success',
+        10000,
+      );
     }
   }
 
@@ -67,6 +84,7 @@ class Register extends Component {
               </NavLink>
               <CardTitle className="mb-4">Register</CardTitle>
               <Formik
+                innerRef={this.formRef}
                 initialValues={initialValues}
                 validationSchema={REGISTER_SCHEMA}
                 onSubmit={this.onUserRegister}

@@ -107,7 +107,10 @@ export const ERROR_MESSAGES = {
 };
 
 export const SUCCESS_MESSAGES = {
-  REGISTER_SUCCESS: 'User registered successfully.',
+  REGISTER_SUCCESS:
+    'Registered successfully. Please check your email to confirm.',
+  ACTIVATION_SUCCESS:
+    'Your account is activated successfully. Please login with your email.',
   UPDATE_ACCOUNT_SUCCESS: 'User account updated successfully.',
   UPDATE_ORGANIZATION_SUCCESS: 'Orgamization saved successfully.',
   CREATE_USER_SUCCESS: 'User created successfully.',

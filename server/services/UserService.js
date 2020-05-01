@@ -70,6 +70,16 @@ class UserService {
     }
   }
 
+  static async getUserBy(where) {
+    try {
+      const theUser = await database.User.findOne({ where });
+
+      return theUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async deleteUser(id) {
     try {
       const userToDelete = await database.User.findOne({

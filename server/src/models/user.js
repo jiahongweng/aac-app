@@ -45,6 +45,12 @@ module.exports = (sequelize, DataTypes) => {
           as: 'organizationId',
         },
       },
+      yearsInSchool: {
+        type: DataTypes.INTEGER,
+      },
+      verificationCode: {
+        type: DataTypes.STRING,
+      },
       status: {
         type: DataTypes.INTEGER,
         defaultValue: 0,

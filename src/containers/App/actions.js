@@ -7,6 +7,9 @@ import {
   LOGIN,
   LOGIN_SUCCESS,
   LOGIN_ERROR,
+  ACTIVATE_ACCOUNT,
+  ACTIVATE_ACCOUNT_SUCCESS,
+  ACTIVATE_ACCOUNT_ERROR,
   UPDATE_ACCOUNT,
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_ERROR,
@@ -59,14 +62,12 @@ export function register({ firstName, lastName, email, password }) {
 /**
  * Dispatched when the user is registered by the request saga
  *
- * @param  {object} user user info
- *
- * @return {object} An action object with a type of REGISTER_SUCCESS passing the user
+ * @return {object} An action object with a type of REGISTER_SUCCESS passing the empty object
  */
-export function registerSucceeded({ token, user }) {
+export function registerSucceeded() {
   return {
     type: REGISTER_SUCCESS,
-    payload: { token, user },
+    payload: {},
   };
 }
 
@@ -123,6 +124,44 @@ export function loginSucceeded({ token, user }) {
 export function loginFailed(error) {
   return {
     type: LOGIN_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Activate user, this action starts the request saga
+ *
+ * @return {object} An action object with a type of ACTIVATE_ACCOUNT
+ */
+export function activateAccount({ verificationCode }) {
+  return {
+    type: ACTIVATE_ACCOUNT,
+    payload: { verificationCode },
+  };
+}
+
+/**
+ * Dispatched when the user is activated in by the request saga
+ *
+ * @return {object} An action object with a type of ACTIVATE_ACCOUNT_SUCCESS passing the empty object
+ */
+export function activateAccountSucceeded() {
+  return {
+    type: ACTIVATE_ACCOUNT_SUCCESS,
+    payload: {},
+  };
+}
+
+/**
+ * Dispatched when activation in user fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of ACTIVATE_ACCOUNT_ERROR passing the error
+ */
+export function activateAccountFailed(error) {
+  return {
+    type: ACTIVATE_ACCOUNT_ERROR,
     payload: { error },
   };
 }

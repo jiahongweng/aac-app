@@ -7,7 +7,7 @@ import {
 } from 'passport-jwt';
 import database from '../src/models';
 import APIError from '../helpers/APIError';
-import { ERROR_MESSAGES } from '../utils/constants';
+import { STATUSES, ERROR_MESSAGES } from '../utils/constants';
 
 const jwtSecret = process.env.JWT_SECRET;
 const jwtOpts = {
@@ -76,6 +76,16 @@ passport.use(
             return done(
               new APIError(
                 ERROR_MESSAGES.INVALID_PASSWORD,
+                httpStatus.FORBIDDEN,
+                true,
+              ),
+            );
+          }
+
+          if (user.status !== STATUSES.ACTIVE) {
+            return done(
+              new APIError(
+                ERROR_MESSAGES.USER_NOT_ACTIVATED,
                 httpStatus.FORBIDDEN,
                 true,
               ),

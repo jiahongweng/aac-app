@@ -14,6 +14,9 @@ const Login = React.lazy(() =>
 const Register = React.lazy(() =>
   import(/* webpackChunkName: "user-rgister" */ 'containers/Register'),
 );
+const Activate = React.lazy(() =>
+  import(/* webpackChunkName: "user-activate" */ 'containers/Activate'),
+);
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: "app-dashboard" */ 'containers/Dashboard'),
 );
@@ -70,6 +73,13 @@ const routes = (isAuthenticated) => (
         <ControlledRoute
           path="/login"
           component={Login}
+          layout={UserLayout}
+          shouldLoad={!isAuthenticated}
+          unloadRedirectTo="/dashboard"
+        />
+        <ControlledRoute
+          path="/activate/:code"
+          component={Activate}
           layout={UserLayout}
           shouldLoad={!isAuthenticated}
           unloadRedirectTo="/dashboard"
