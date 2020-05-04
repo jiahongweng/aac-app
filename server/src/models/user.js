@@ -51,8 +51,14 @@ module.exports = (sequelize, DataTypes) => {
       verificationCode: {
         type: DataTypes.STRING,
       },
-      status: {
+      resetPasswordToken: {
+        type: DataTypes.STRING,
+      },
+      resetPasswordExpires: {
         type: DataTypes.INTEGER,
+      },
+      status: {
+        type: DataTypes.BIGINT,
         defaultValue: 0,
         validate: {
           min: 0,

@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { login } from 'containers/App/actions';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { LOGIN_SCHEMA } from 'utils/constants';
+import injectSaga from 'utils/injectSaga';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
+import saga from './saga';
 
 class Login extends Component {
   onUserLogin = (values) => {
@@ -95,9 +102,7 @@ class Login extends Component {
                     </FormGroup>
 
                     <div className="d-flex justify-content-between align-items-center">
-                      <NavLink to="/user/forgot-password">
-                        Forgot password?
-                      </NavLink>
+                      <NavLink to="/forgot-password">Forgot password?</NavLink>
                       <Button
                         type="submit"
                         color="primary"
@@ -130,4 +135,15 @@ Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapStateToProps = createStructuredSelector({
+  currentUser: makeSelectCurrentUser(),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  loginUser: ({ email, password }) => dispatch(login({ email, password })),
+});
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withSaga = injectSaga({ key: 'login', saga });
+
+export default compose(withSaga, withConnect)(Login);

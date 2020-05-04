@@ -6,5 +6,7 @@ const router = Router();
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/activate/:verificationCode', authController.activateAccount);
+router.post('/forgot', authController.forgotPassword);
+router.post('/reset/:token', authController.resetPassword);
 
 export default router;

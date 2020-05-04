@@ -1,12 +1,19 @@
 import React, { Component, createRef } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { register } from 'containers/App/actions';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { REGISTER_SCHEMA, SUCCESS_MESSAGES } from 'utils/constants';
+import injectSaga from 'utils/injectSaga';
 import { NavLink } from 'react-router-dom';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
+import saga from './saga';
 
 class Register extends Component {
   constructor(props) {
@@ -188,4 +195,14 @@ Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
 };
 
-export default Register;
+const mapStateToProps = createStructuredSelector({
+  currentUser: makeSelectCurrentUser(),
+});
+const mapDispatchToProps = (dispatch) => ({
+  registerUser: ({ firstName, lastName, email, password }) =>
+    dispatch(register({ firstName, lastName, email, password })),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withSaga = injectSaga({ key: 'register', saga });
+
+export default compose(withSaga, withConnect)(Register);

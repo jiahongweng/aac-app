@@ -9,13 +9,23 @@ import {
 import { UserLayout, AppLayout } from 'layout';
 
 const Login = React.lazy(() =>
-  import(/* webpackChunkName: "user-login" */ 'containers/Login'),
+  import(/* webpackChunkName: "user-login" */ 'containers/Auth/Login'),
 );
 const Register = React.lazy(() =>
-  import(/* webpackChunkName: "user-rgister" */ 'containers/Register'),
+  import(/* webpackChunkName: "user-rgister" */ 'containers/Auth/Register'),
 );
 const Activate = React.lazy(() =>
-  import(/* webpackChunkName: "user-activate" */ 'containers/Activate'),
+  import(/* webpackChunkName: "user-activate" */ 'containers/Auth/Activate'),
+);
+const ForgotPassword = React.lazy(() =>
+  import(
+    /* webpackChunkName: "user-forgot-password" */ 'containers/Auth/ForgotPassword'
+  ),
+);
+const ResetPassword = React.lazy(() =>
+  import(
+    /* webpackChunkName: "user-reset-password" */ 'containers/Auth/ResetPassword'
+  ),
 );
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: "app-dashboard" */ 'containers/Dashboard'),
@@ -80,6 +90,20 @@ const routes = (isAuthenticated) => (
         <ControlledRoute
           path="/activate/:code"
           component={Activate}
+          layout={UserLayout}
+          shouldLoad={!isAuthenticated}
+          unloadRedirectTo="/dashboard"
+        />
+        <ControlledRoute
+          path="/forgot-password"
+          component={ForgotPassword}
+          layout={UserLayout}
+          shouldLoad={!isAuthenticated}
+          unloadRedirectTo="/dashboard"
+        />
+        <ControlledRoute
+          path="/reset-password/:token"
+          component={ResetPassword}
           layout={UserLayout}
           shouldLoad={!isAuthenticated}
           unloadRedirectTo="/dashboard"

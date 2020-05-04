@@ -1,7 +1,8 @@
-const BCRYPT_SALT_ROUNDS = 10;
-const PAGE_PER_NUM = 10;
+export const BCRYPT_SALT_ROUNDS = 10;
+export const PAGE_PER_NUM = 10;
+export const RESET_PASSWORD_EXPIRES = 60 * 60 * 1000;
 
-const ROLES = {
+export const ROLES = {
   ADMIN: 2,
   CLIENT: 1,
 };
@@ -11,7 +12,7 @@ export const STATUSES = {
   INACTIVE: 0,
 };
 
-const ERROR_MESSAGES = {
+export const ERROR_MESSAGES = {
   API_NOT_FOUND: 'API not found.',
   INCOMPLETE_REQUEST: 'Please provide all required fields.',
   EMAIL_ALREADY_TAKEN:
@@ -20,6 +21,7 @@ const ERROR_MESSAGES = {
   INVALID_NUMERIC_VALUE: 'Please input a valid numeric value',
   INVALID_EMAIL: 'Invalid email address.',
   INVALID_PASSWORD: 'Invalid password.',
+  INVALID_RESET_PASSWORD: 'Password reset link is invalid or has expired.',
   USER_NOT_FOUND: 'User not found.',
   USER_NOT_FOUND_WITH_ID: (userId) => `Cannot find user with the id: ${userId}`,
   USER_ROLE_NOT_ALLOWED:
@@ -33,5 +35,3 @@ const ERROR_MESSAGES = {
     `Cannot find organization with the id: ${organizationId}`,
   ORGANIZATION_ALEADY_EXIST_WITH_USER: 'User has an organization already.',
 };
-
-export { BCRYPT_SALT_ROUNDS, PAGE_PER_NUM, ROLES, ERROR_MESSAGES };

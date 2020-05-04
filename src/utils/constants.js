@@ -35,6 +35,17 @@ const profileShape = {
   firstName: Yup.string().required('Please enter your first name'),
   lastName: Yup.string().required('Please enter your last name'),
 };
+const resetPasswordShape = {
+  password: Yup.string()
+    .required('Please enter your new password')
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters'),
+  confirmPassword: Yup.string()
+    .required('Please enter your confirm password')
+    .min(3, 'Password must be longer than 3 characters')
+    .max(20, 'Password must be shorter than 20 characters')
+    .oneOf([Yup.ref('password'), null], 'Password does not match'),
+};
 const accountPasswordShape = {
   oldPassword: Yup.string()
     .min(3, 'Password must be longer than 3 characters')
@@ -74,6 +85,10 @@ export const REGISTER_SCHEMA = Yup.object().shape({
   ...profileShape,
   ...authShape,
 });
+export const FORGOT_PASSWORD_SCHEMA = Yup.object().shape({
+  email: authShape.email,
+});
+export const RESET_PASSWORD_SCHEMA = Yup.object().shape(resetPasswordShape);
 export const ACCOUNT_SCHEMA = Yup.object().shape(
   {
     ...profileShape,
@@ -111,6 +126,10 @@ export const SUCCESS_MESSAGES = {
     'Registered successfully. Please check your email to confirm.',
   ACTIVATION_SUCCESS:
     'Your account is activated successfully. Please login with your email.',
+  FORGOT_PASSWORD_SUCCESS:
+    'Password recovery email sent. Please check your email.',
+  RESET_PASSWORD_SUCCESS:
+    'Your password has been successfully reset, please try logging in again.',
   UPDATE_ACCOUNT_SUCCESS: 'User account updated successfully.',
   UPDATE_ORGANIZATION_SUCCESS: 'Orgamization saved successfully.',
   CREATE_USER_SUCCESS: 'User created successfully.',

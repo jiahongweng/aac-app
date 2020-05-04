@@ -19,6 +19,12 @@ import {
   ACTIVATE_ACCOUNT,
   ACTIVATE_ACCOUNT_SUCCESS,
   ACTIVATE_ACCOUNT_ERROR,
+  FORGOT_PASSWORD,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_ERROR,
+  RESET_PASSWORD,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_ERROR,
   UPDATE_ACCOUNT,
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_ERROR,
@@ -57,6 +63,8 @@ function appReducer(state = initialState, action) {
     case REGISTER:
     case LOGIN:
     case ACTIVATE_ACCOUNT:
+    case FORGOT_PASSWORD:
+    case RESET_PASSWORD:
       return {
         ...state,
         isAuthenticated: false,
@@ -68,6 +76,8 @@ function appReducer(state = initialState, action) {
       };
     case REGISTER_SUCCESS:
     case ACTIVATE_ACCOUNT_SUCCESS:
+    case FORGOT_PASSWORD_SUCCESS:
+    case RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
@@ -93,6 +103,8 @@ function appReducer(state = initialState, action) {
     case REGISTER_ERROR:
     case LOGIN_ERROR:
     case ACTIVATE_ACCOUNT_ERROR:
+    case FORGOT_PASSWORD_ERROR:
+    case RESET_PASSWORD_ERROR:
       deleteTokenInStorage();
       deleteUserInStorage();
 

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { template, accountActivation } from '../emails';
+import { template, accountActivation, resetPassword } from '../emails';
 
 // The credentials for the email account you want to send mail from.
 // We have to enable the Gmail service to use it in third-party apps. In case we miss to do so, we may face such error.
@@ -27,6 +27,18 @@ class EmailService {
       subject,
       message: template(
         body(username, `${process.env.REACT_APP_URL}/activate/${code}`),
+      ),
+    });
+  }
+
+  static sendResetPasswordEmail({ to, username, token }) {
+    const { subject, body } = resetPassword;
+    this.send({
+      from: process.env.MAIL_USER,
+      to,
+      subject,
+      message: template(
+        body(username, `${process.env.REACT_APP_URL}/reset-password/${token}`),
       ),
     });
   }

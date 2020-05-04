@@ -16,6 +16,12 @@ import {
   UPDATE_ORGANIZATION,
   UPDATE_ORGANIZATION_SUCCESS,
   UPDATE_ORGANIZATION_ERROR,
+  FORGOT_PASSWORD,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_ERROR,
+  RESET_PASSWORD,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_ERROR,
 } from './constants';
 
 /**
@@ -162,6 +168,82 @@ export function activateAccountSucceeded() {
 export function activateAccountFailed(error) {
   return {
     type: ACTIVATE_ACCOUNT_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Forgot password, this action starts the request saga
+ *
+ * @return {object} An action object with a type of FORGOT_PASSWORD
+ */
+export function forgotPassword({ email }) {
+  return {
+    type: FORGOT_PASSWORD,
+    payload: { email },
+  };
+}
+
+/**
+ * Dispatched when the user has sent forgot password request in by the request saga
+ *
+ * @return {object} An action object with a type of FORGOT_PASSWORD_SUCCESS passing the empty object
+ */
+export function forgotPasswordSucceeded() {
+  return {
+    type: FORGOT_PASSWORD_SUCCESS,
+    payload: {},
+  };
+}
+
+/**
+ * Dispatched when forgot password in user fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of FORGOT_PASSWORD_ERROR passing the error
+ */
+export function forgotPasswordFailed(error) {
+  return {
+    type: FORGOT_PASSWORD_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Rest password, this action starts the request saga
+ *
+ * @return {object} An action object with a type of RESET_PASSWORD
+ */
+export function resetPassword({ token, password }) {
+  return {
+    type: RESET_PASSWORD,
+    payload: { token, password },
+  };
+}
+
+/**
+ * Dispatched when the user reset password in by the request saga
+ *
+ * @return {object} An action object with a type of RESET_PASSWORD_SUCCESS passing the empty object
+ */
+export function resetPasswordSucceeded() {
+  return {
+    type: RESET_PASSWORD_SUCCESS,
+    payload: {},
+  };
+}
+
+/**
+ * Dispatched when forgot password in user fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of RESET_PASSWORD_ERROR passing the error
+ */
+export function resetPasswordFailed(error) {
+  return {
+    type: RESET_PASSWORD_ERROR,
     payload: { error },
   };
 }
