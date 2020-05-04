@@ -82,7 +82,7 @@ export function* activateAccountWatcher() {
 export function* forgotPassword(action) {
   const options = makeJsonRequestOptions({
     method: 'POST',
-    requestUrlPath: `auth/forgot`,
+    requestUrlPath: 'auth/forgot',
     data: action.payload,
   });
 
@@ -122,12 +122,20 @@ export function* resetPasswordWatcher() {
 }
 
 /**
- * Root saga manages watcher lifecycle
+ * Root sagas manages watcher lifecycle
  */
-export default function* loginMainSaga() {
+export function* loginMainSaga() {
   yield fork(loginWatcher);
+}
+export function* registerMainSaga() {
   yield fork(registerWatcher);
+}
+export function* activateMainSaga() {
   yield fork(activateAccountWatcher);
+}
+export function* forgotPasswordMainSaga() {
   yield fork(forgotPasswordWatcher);
+}
+export function* resetPasswordMainSaga() {
   yield fork(resetPasswordWatcher);
 }

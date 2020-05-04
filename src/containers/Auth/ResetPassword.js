@@ -13,7 +13,7 @@ import { RESET_PASSWORD_SCHEMA, SUCCESS_MESSAGES } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
-import saga from './saga';
+import { resetPasswordMainSaga as saga } from './saga';
 
 class ResetPassword extends Component {
   constructor(props) {

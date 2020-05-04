@@ -13,7 +13,7 @@ import injectSaga from 'utils/injectSaga';
 import { NavLink } from 'react-router-dom';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
-import saga from './saga';
+import { registerMainSaga as saga } from './saga';
 
 class Register extends Component {
   constructor(props) {

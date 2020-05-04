@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import UserService from '../services/UserService';
 import OrganizationService from '../services/OrganizationService';
 import Util from '../utils/Utils';
-import { userWithoutPassword, parseRequestQuery } from '../utils/misc';
+import { parseRequestQuery } from '../utils/misc';
 import { PAGE_PER_NUM, ERROR_MESSAGES } from '../utils/constants';
 
 const util = new Util();
@@ -13,10 +13,7 @@ class UserController {
     try {
       const { page = 0, limit = PAGE_PER_NUM } = parseRequestQuery(req.query);
       const { order, orderBy } = req.query;
-      const {
-        count: totalCount,
-        rows: allUsers,
-      } = await UserService.getAllUsers({
+      const { count: totalCount, rows: users } = await UserService.getAllUsers({
         order,
         orderBy,
         page,
@@ -26,7 +23,7 @@ class UserController {
         total: totalCount,
         page,
         limit,
-        users: allUsers.map((user) => userWithoutPassword(user)),
+        users,
       });
       return util.send(res);
     } catch (error) {
@@ -64,7 +61,10 @@ class UserController {
         role,
         status,
       });
-      util.setSuccess(httpStatus.CREATED, userWithoutPassword(createdUser));
+      util.setSuccess(
+        httpStatus.CREATED,
+        await UserService.getUser(createdUser.id),
+      );
       return util.send(res);
     } catch (error) {
       util.setError(httpStatus.BAD_REQUEST, error.message);
@@ -96,7 +96,7 @@ class UserController {
         );
       } else {
         updatedUser = await UserService.getUser(id);
-        util.setSuccess(httpStatus.OK, userWithoutPassword(updatedUser));
+        util.setSuccess(httpStatus.OK, updatedUser);
       }
       return util.send(res);
     } catch (error) {
@@ -125,7 +125,7 @@ class UserController {
           ERROR_MESSAGES.USER_NOT_FOUND_WITH_ID(id),
         );
       } else {
-        util.setSuccess(httpStatus.OK, userWithoutPassword(theUser));
+        util.setSuccess(httpStatus.OK, theUser);
       }
       return util.send(res);
     } catch (error) {
@@ -198,10 +198,7 @@ class UserController {
       }
     }
 
-    util.setSuccess(
-      httpStatus.OK,
-      userWithoutPassword(await UserService.getUser(user.id)),
-    );
+    util.setSuccess(httpStatus.OK, await UserService.getUser(user.id));
     return util.send(res);
   }
 }

@@ -72,9 +72,11 @@ export function* updateOrganizationWatcher() {
 }
 
 /**
- * Root saga manages watcher lifecycle
+ * Root sagas manages watcher lifecycle
  */
-export default function* accountMainSaga() {
+export function* accountSettingMainSaga() {
   yield fork(updateAccountWatcher);
+}
+export function* organizationSettingMainSaga() {
   yield fork(updateOrganizationWatcher);
 }

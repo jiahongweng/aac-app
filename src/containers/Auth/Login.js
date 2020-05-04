@@ -13,10 +13,11 @@ import { LOGIN_SCHEMA } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
-import saga from './saga';
+import { loginMainSaga as saga } from './saga';
 
 class Login extends Component {
   onUserLogin = (values) => {
+    console.log('Login started ...', { values });
     const {
       currentUser: { loading },
       loginUser,

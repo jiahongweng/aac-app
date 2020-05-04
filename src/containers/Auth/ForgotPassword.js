@@ -13,7 +13,7 @@ import { FORGOT_PASSWORD_SCHEMA, SUCCESS_MESSAGES } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
-import saga from './saga';
+import { forgotPasswordMainSaga as saga } from './saga';
 
 class ForgotPassword extends Component {
   constructor(props) {

@@ -22,7 +22,7 @@ import { ThumbnailImage } from 'components/others';
 import { updateAccount } from 'containers/App/actions';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
 import injectSaga from 'utils/injectSaga';
-import saga from './saga';
+import { accountSettingMainSaga as saga } from './saga';
 
 class Account extends Component {
   componentDidUpdate(prevProps) {

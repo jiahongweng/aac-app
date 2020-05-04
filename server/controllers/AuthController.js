@@ -7,7 +7,6 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 import UserService from '../services/UserService';
 import EmailService from '../services/EmailService';
-import { userWithoutPassword } from '../utils/misc';
 import APIError from '../helpers/APIError';
 import {
   STATUSES,
@@ -70,7 +69,7 @@ exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user.id }, jwtSecret);
       return res.status(httpStatus.OK).json({
         token,
-        user: userWithoutPassword(await UserService.getUser(user.id)),
+        user: await UserService.getUser(user.id),
       });
     });
   })(req, res, next);
@@ -164,7 +163,6 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   const { token: resetPasswordToken } = req.params;
   const { password } = req.body;
-  console.log({ password });
 
   try {
     const user = await UserService.getUserBy({

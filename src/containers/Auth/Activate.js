@@ -9,7 +9,7 @@ import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { SUCCESS_MESSAGES } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
 import { NotificationManager } from 'components/common/notifications';
-import saga from './saga';
+import { activateMainSaga as saga } from './saga';
 
 class Activate extends Component {
   constructor(props) {

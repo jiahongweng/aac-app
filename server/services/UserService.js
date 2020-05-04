@@ -12,6 +12,16 @@ class UserService {
         where: {
           role: 1,
         },
+        attributes: {
+          exclude: [
+            'password',
+            'verificationCode',
+            'resetPasswordToken',
+            'resetPasswordExpires',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
         order: orders,
         limit,
         offset: page * limit,
@@ -60,7 +70,15 @@ class UserService {
           },
         ],
         attributes: {
-          exclude: ['organizationId'],
+          exclude: [
+            'organizationId',
+            'password',
+            'verificationCode',
+            'resetPasswordToken',
+            'resetPasswordExpires',
+            'createdAt',
+            'updatedAt',
+          ],
         },
       });
 

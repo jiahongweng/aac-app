@@ -15,7 +15,7 @@ import { Breadcrumb } from 'components/navs';
 import { updateOrganization } from 'containers/App/actions';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
 import injectSaga from 'utils/injectSaga';
-import saga from './saga';
+import { organizationSettingMainSaga as saga } from './saga';
 
 const usStates = new UsaStates();
 const stateSelectOptions = usStates.states.map((state) => ({
