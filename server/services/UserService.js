@@ -105,9 +105,14 @@ class UserService {
       });
 
       if (userToDelete) {
+        const userOrganization = await userToDelete.getOrganization();
         const deletedUser = await database.User.destroy({
           where: { id: Number(id) },
         });
+
+        if (userOrganization) {
+          await userOrganization.destroy();
+        }
         return deletedUser;
       }
       return null;
