@@ -5,6 +5,8 @@ import history from 'utils/history';
 import globalReducer from 'containers/App/reducer';
 import userListReducer from 'containers/UserList/reducer';
 import userReducer from 'containers/User/reducer';
+import organizationListReducer from 'containers/OrganizationList/reducer';
+import organizationReducer from 'containers/Organization/reducer';
 import menuReducer from 'components/navs/reducer';
 
 export default function createReducer(injectedReducers = {}) {
@@ -12,6 +14,8 @@ export default function createReducer(injectedReducers = {}) {
     global: globalReducer,
     userList: userListReducer,
     user: userReducer,
+    organizationList: organizationListReducer,
+    organization: organizationReducer,
     menu: menuReducer,
     router: connectRouter(history),
     ...injectedReducers,

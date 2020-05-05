@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, NavLink } from 'react-router-dom';
-import { Row, Card, CardBody, Button, Badge } from 'reactstrap';
+import { Row, Card, CardBody, Button } from 'reactstrap';
 import confirm from 'reactstrap-confirm';
 import ReactTable from 'react-table';
 import { last } from 'lodash';
 import UserModal from 'containers/User';
+import OrganizationModal from 'containers/Organization';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
 import { TablePagination } from 'components/pagination';
 import { ROLES, ACTIONS } from 'utils/constants';
-import { DEFAULT_PAGE_SIZE, STATUS } from './constants';
+import { DEFAULT_PAGE_SIZE } from './constants';
 
-class UserList extends Component {
+class OrganizationList extends Component {
   constructor(props) {
     super(props);
 
@@ -21,7 +22,9 @@ class UserList extends Component {
       mode: ACTIONS.NONE,
       modalOpen: false,
       needRefresh: false,
+      organizationId: null,
       userId: null,
+      userModalOpen: false,
       order: '',
       orderBy: '',
     };
@@ -40,7 +43,7 @@ class UserList extends Component {
       order = lastSorted.desc ? 'desc' : 'asc';
       orderBy = lastSorted.id;
     }
-    this.props.fetchUserList({
+    this.props.fetchOrganizationList({
       order,
       orderBy,
       page,
@@ -56,27 +59,27 @@ class UserList extends Component {
       needRefresh === true
     ) {
       const {
-        fetchUserList,
-        users: { page, limit },
+        fetchOrganizationList,
+        organizations: { page, limit },
       } = prevProps;
-      fetchUserList({ order, orderBy, page, limit });
+      fetchOrganizationList({ order, orderBy, page, limit });
       this.setState({ needRefresh: false });
     }
   };
 
-  deleteUser = async (userId) => {
+  deleteOrganization = async (organizationId) => {
     const confirmResult = await confirm({
       title: <span className="text-danger">Delete Confirmation</span>,
-      message: 'Would you like to remove this user from the list?',
+      message: 'Would you like to remove this organization from the list?',
       confirmText: 'Confirm',
     });
     if (confirmResult) {
-      this.props.deleteSelectedUser({ id: userId });
+      this.props.deleteSelectedOrganization({ id: organizationId });
     }
   };
 
-  openModal = (mode, userId = null) => {
-    this.setState({ mode, userId });
+  openModal = (mode, organizationId = null) => {
+    this.setState({ mode, organizationId });
     this.toggleModal();
   };
 
@@ -89,13 +92,33 @@ class UserList extends Component {
     }));
   };
 
+  openUserModal = (userId = null, mode = ACTIONS.EDIT) => {
+    this.setState({ userId, mode });
+    this.toggleUserModal();
+  };
+
+  toggleUserModal = (needRefresh = false) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      userModalOpen: !prevState.userModalOpen,
+      mode: prevState.modalOpen ? ACTIONS.NONE : prevState.mode,
+      needRefresh,
+    }));
+  };
+
   render() {
     const {
       currentUser: { data: currentUserData },
-      users: { loading, error, data, total, limit },
+      organizations: { loading, error, data, total, limit },
       match,
     } = this.props;
-    const { mode, userId, modalOpen } = this.state;
+    const {
+      mode,
+      organizationId,
+      modalOpen,
+      userId,
+      userModalOpen,
+    } = this.state;
 
     if (ROLES.ADMIN !== currentUserData.role) {
       return <Redirect to={{ pathname: '/' }} />;
@@ -108,7 +131,8 @@ class UserList extends Component {
       <>
         <Row>
           <Colxx xxs="12">
-            <Breadcrumb heading="users" match={match} />
+            <Breadcrumb heading="organizations" match={match} />
+            {/* Disable organization creation for admin
             <div className="text-zero top-right-button-container mb-2">
               <Button
                 color="primary"
@@ -118,7 +142,7 @@ class UserList extends Component {
               >
                 Add New
               </Button>
-            </div>
+            </div> */}
             <Separator className="mb-5" />
           </Colxx>
         </Row>
@@ -130,7 +154,7 @@ class UserList extends Component {
                   columns={[
                     {
                       Header: 'Name',
-                      accessor: 'firstName',
+                      accessor: 'name',
                       Cell: (props) => (
                         <NavLink
                           to="#"
@@ -139,36 +163,51 @@ class UserList extends Component {
                           }
                         >
                           <p className="font-weight-semibold truncate">
-                            {props.original.firstName} {props.original.lastName}
+                            {props.value}
                           </p>
                         </NavLink>
                       ),
                     },
                     {
-                      Header: 'E-mail',
-                      accessor: 'email',
-                      Cell: (props) => (
-                        <p className="text-muted">{props.value}</p>
+                      Header: 'Location',
+                      accessor: 'location',
+                      Cell: ({
+                        value: { address1, address2, city, state, zipCode },
+                      }) => (
+                        <p className="text-muted">
+                          {`${address1}${address2 ? `, ${address2}` : ''}`}
+                          <br />
+                          {`${city}, ${state} ${zipCode}`}
+                        </p>
                       ),
                     },
                     {
-                      Header: 'Phone',
-                      accessor: 'phone',
-                      Cell: (props) => (
-                        <p className="text-muted">{props.value}</p>
+                      Header: 'Shipping Address',
+                      accessor: 'shippingAddress',
+                      Cell: ({
+                        value: { address1, address2, city, state, zipCode },
+                      }) => (
+                        <p className="text-muted">
+                          {`${address1}${address2 ? `, ${address2}` : ''}`}
+                          <br />
+                          {`${city}, ${state} ${zipCode}`}
+                        </p>
                       ),
                     },
                     {
-                      Header: 'Status',
-                      accessor: 'status',
+                      Header: 'Representative',
+                      accessor: 'representative.firstName',
                       Cell: (props) => (
-                        <Badge
-                          color={STATUS[props.value].color}
-                          className="px-4"
-                          pill
+                        <NavLink
+                          to="#"
+                          onClick={() =>
+                            this.openUserModal(props.original.representative.id)
+                          }
                         >
-                          {STATUS[props.value].name}
-                        </Badge>
+                          <p className="font-weight-semibold truncate">
+                            {`${props.original.representative.firstName} ${props.original.representative.lastName}`}
+                          </p>
+                        </NavLink>
                       ),
                     },
                     {
@@ -191,7 +230,9 @@ class UserList extends Component {
                             outline
                             color="danger"
                             className="icon-button mx-2"
-                            onClick={() => this.deleteUser(props.original.id)}
+                            onClick={() =>
+                              this.deleteOrganization(props.original.id)
+                            }
                           >
                             <i className="simple-icon-trash" />
                           </Button>
@@ -209,29 +250,44 @@ class UserList extends Component {
                   showPageJump={false}
                   showPageSizeOptions
                   minRows={0}
+                  getTheadThProps={() => ({
+                    className: 'px-4',
+                  })}
+                  getTdProps={() => ({
+                    className: 'px-4',
+                  })}
+                  getTrGroupProps={() => ({
+                    className: 'py-2',
+                  })}
                 />
               </CardBody>
             </Card>
           </Colxx>
         </Row>
+        <OrganizationModal
+          mode={mode}
+          organizationId={organizationId}
+          isOpen={modalOpen}
+          toggle={this.toggleModal}
+        />
         <UserModal
           mode={mode}
           userId={userId}
-          isOpen={modalOpen}
-          toggle={this.toggleModal}
+          isOpen={userModalOpen}
+          toggle={this.toggleUserModal}
         />
       </>
     );
   }
 }
 
-UserList.propTypes = {
+OrganizationList.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired,
+  organizations: PropTypes.object.isRequired,
   needRefresh: PropTypes.bool.isRequired,
-  fetchUserList: PropTypes.func.isRequired,
-  deleteSelectedUser: PropTypes.func.isRequired,
+  fetchOrganizationList: PropTypes.func.isRequired,
+  deleteSelectedOrganization: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
 };
 
-export default UserList;
+export default OrganizationList;

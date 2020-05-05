@@ -4,9 +4,9 @@ import database from '../src/models';
 class UserService {
   static async getAllUsers({ order, orderBy, page, limit }) {
     try {
-      const orders = [['createdAt', 'asc']];
+      let orders = [['createdAt', 'asc']];
       if ((order === 'asc' || order === 'desc') && orderBy) {
-        orders.push([orderBy, order]);
+        orders = [[orderBy, order]];
       }
       return await database.User.findAndCountAll({
         where: {

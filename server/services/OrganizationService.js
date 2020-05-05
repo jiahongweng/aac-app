@@ -4,9 +4,19 @@ import database from '../src/models';
 class OrganizationService {
   static async getAllOrganizations({ order, orderBy, page, limit }) {
     try {
-      const orders = [['createdAt', 'asc']];
+      let orders = [['createdAt', 'asc']];
       if ((order === 'asc' || order === 'desc') && orderBy) {
-        orders.push([orderBy, order]);
+        if (orderBy.includes('representative.')) {
+          orders = [
+            [
+              { model: database.User, as: 'representative' },
+              orderBy.split('representative.')[1],
+              order,
+            ],
+          ];
+        } else {
+          orders = [[orderBy, order]];
+        }
       }
       return await database.Organization.findAndCountAll({
         order: orders,

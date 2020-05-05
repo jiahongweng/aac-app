@@ -17,7 +17,6 @@ import { loginMainSaga as saga } from './saga';
 
 class Login extends Component {
   onUserLogin = (values) => {
-    console.log('Login started ...', { values });
     const {
       currentUser: { loading },
       loginUser,

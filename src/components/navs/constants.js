@@ -19,6 +19,13 @@ export const MENU_ITEMS = [
     permission: [ROLES.ADMIN],
   },
   {
+    id: 'organizations',
+    icon: 'iconsminds-building',
+    label: 'Organizations',
+    to: '/organizations',
+    permission: [ROLES.ADMIN],
+  },
+  {
     id: 'orders',
     icon: 'iconsminds-checkout',
     label: 'Orders',
@@ -30,6 +37,7 @@ export const BREADCRUMB_ITEMS = {
   'breadcrumb.home': 'Home',
   'breadcrumb.dashboard': 'Dashboard',
   'breadcrumb.users': 'Users',
+  'breadcrumb.organizations': 'Organizations',
   'breadcrumb.settings': 'Settings',
   'breadcrumb.account': 'Account',
   'breadcrumb.organization': 'Organization',

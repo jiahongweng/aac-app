@@ -29,7 +29,11 @@ const statusSelectOptions = [
 class UserModal extends Component {
   constructor(props) {
     super(props);
+
     this.formRef = createRef();
+    this.state = {
+      submiting: false,
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -41,16 +45,12 @@ class UserModal extends Component {
       user: { loading, error },
       toggle,
     } = this.props;
+    const { submiting } = this.state;
 
     if (isOpen) {
       if (error) {
         NotificationManager.error(error.message, 'Error');
-      } else if (
-        prevLoading &&
-        !loading &&
-        this.formRef.current &&
-        this.formRef.current.isSubmitting
-      ) {
+      } else if (prevLoading && !loading && submiting) {
         toggle(true);
       }
     }
@@ -59,13 +59,18 @@ class UserModal extends Component {
 
   onOpened = () => {
     const { mode, fetchSelectedUser, userId } = this.props;
+
     if (mode === ACTIONS.EDIT) {
       fetchSelectedUser({ id: userId });
     }
+
+    this.setState({ submiting: false });
   };
 
   onClosed = () => {
     const { initUser } = this.props;
+
+    this.setState({ submiting: false });
     initUser();
   };
 
@@ -80,11 +85,14 @@ class UserModal extends Component {
   onSubmit = (values) => {
     const { mode, userId, createNewUser, updateSelectedUser } = this.props;
     const submitValues = { ...values, role: values.role.value };
+
     if (mode === ACTIONS.EDIT) {
       updateSelectedUser({ ...submitValues, id: userId });
     } else {
       createNewUser(submitValues);
     }
+
+    this.setState({ submiting: true });
   };
 
   render() {
@@ -98,6 +106,7 @@ class UserModal extends Component {
       role: roleSelectOptions.find((role) => role.value === ROLES.CLIENT),
       status: STATUSES.INACTIVE,
     };
+
     if (mode === ACTIONS.EDIT && user.data) {
       initialValues = {
         ...user.data,
