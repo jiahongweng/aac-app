@@ -10,6 +10,7 @@ import { NavLink, withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import Avatar from 'react-avatar';
+import { useGoogleLogout } from 'react-google-login';
 import { createStructuredSelector } from 'reselect';
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import { logout } from 'containers/App/actions';
@@ -22,6 +23,26 @@ import {
   makeSelectMenuClickCount,
   makeSelectMenuHasSubItems,
 } from './selectors';
+
+const LogoutDropwdownItem = ({ logoutUser }) => {
+  const { signOut, loaded } = useGoogleLogout({
+    clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+    onLogoutSuccess: () => {
+      // nothing to do
+    },
+  });
+  const handleSignout = () => {
+    if (loaded) {
+      signOut();
+    }
+    logoutUser();
+  };
+
+  return <DropdownItem onClick={() => handleSignout()}>Sign out</DropdownItem>;
+};
+LogoutDropwdownItem.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+};
 
 class TopNav extends Component {
   constructor(props) {
@@ -68,7 +89,7 @@ class TopNav extends Component {
     });
   };
 
-  handleLogout = () => {
+  handleLogout = async () => {
     this.props.logoutUser();
   };
 
@@ -166,9 +187,7 @@ class TopNav extends Component {
                 <DropdownItem>History</DropdownItem>
                 <DropdownItem>Support</DropdownItem> */}
                 <DropdownItem divider />
-                <DropdownItem onClick={() => this.handleLogout()}>
-                  Sign out
-                </DropdownItem>
+                <LogoutDropwdownItem logoutUser={this.handleLogout} />
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>

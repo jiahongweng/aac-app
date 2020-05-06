@@ -7,6 +7,8 @@ import {
   LOGIN,
   LOGIN_SUCCESS,
   LOGIN_ERROR,
+  GOOGLE_REGISTER,
+  GOOGLE_LOGIN,
   ACTIVATE_ACCOUNT,
   ACTIVATE_ACCOUNT_SUCCESS,
   ACTIVATE_ACCOUNT_ERROR,
@@ -131,6 +133,34 @@ export function loginFailed(error) {
   return {
     type: LOGIN_ERROR,
     payload: { error },
+  };
+}
+
+/**
+ * Google register user, this action starts the request saga
+ *
+ * @return {object} An action object with a type of GOOGLE_REGISTER
+ */
+export function googleRegister({ idToken }) {
+  return {
+    type: GOOGLE_REGISTER,
+    payload: {
+      idToken,
+    },
+  };
+}
+
+/**
+ * Google login user, this action starts the request saga
+ *
+ * @return {object} An action object with a type of GOOGLE_LOGIN
+ */
+export function googleLogin({ idToken }) {
+  return {
+    type: GOOGLE_LOGIN,
+    payload: {
+      idToken,
+    },
   };
 }
 

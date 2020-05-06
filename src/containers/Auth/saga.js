@@ -2,6 +2,8 @@ import { call, fork, takeLatest } from 'redux-saga/effects';
 import {
   LOGIN,
   REGISTER,
+  GOOGLE_LOGIN,
+  GOOGLE_REGISTER,
   ACTIVATE_ACCOUNT,
   FORGOT_PASSWORD,
   RESET_PASSWORD,
@@ -53,6 +55,48 @@ export function* register(action) {
 
 export function* registerWatcher() {
   yield takeLatest(REGISTER, register);
+}
+
+/**
+ * GOOGLE LOGIN saga
+ */
+export function* googleLogin(action) {
+  const { idToken } = action.payload;
+  const options = makeJsonRequestOptions({
+    method: 'POST',
+    requestUrlPath: 'auth/google',
+    data: {
+      mode: 'login',
+      idToken,
+    },
+  });
+
+  yield call(appApiSaga, options, [loginSucceeded], loginFailed);
+}
+
+export function* googleLoginWatcher() {
+  yield takeLatest(GOOGLE_LOGIN, googleLogin);
+}
+
+/**
+ * GOOGLE REGISTER saga
+ */
+export function* googleRegister(action) {
+  const { idToken } = action.payload;
+  const options = makeJsonRequestOptions({
+    method: 'POST',
+    requestUrlPath: 'auth/google',
+    data: {
+      mode: 'register',
+      idToken,
+    },
+  });
+
+  yield call(appApiSaga, options, [loginSucceeded], registerFailed);
+}
+
+export function* googleRegisterWatcher() {
+  yield takeLatest(GOOGLE_REGISTER, googleRegister);
 }
 
 /**
@@ -126,9 +170,11 @@ export function* resetPasswordWatcher() {
  */
 export function* loginMainSaga() {
   yield fork(loginWatcher);
+  yield fork(googleLoginWatcher);
 }
 export function* registerMainSaga() {
   yield fork(registerWatcher);
+  yield fork(googleRegisterWatcher);
 }
 export function* activateMainSaga() {
   yield fork(activateAccountWatcher);

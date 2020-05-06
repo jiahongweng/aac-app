@@ -5,12 +5,13 @@ import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { register } from 'containers/App/actions';
+import { register, googleRegister } from 'containers/App/actions';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { REGISTER_SCHEMA, SUCCESS_MESSAGES } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
-import { NavLink } from 'react-router-dom';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { registerMainSaga as saga } from './saga';
@@ -20,6 +21,13 @@ class Register extends Component {
     super(props);
     this.formRef = createRef();
   }
+
+  onGoogleSignup = (response) => {
+    const { googleRegisterUser } = this.props;
+    const { id_token: idToken } = response.getAuthResponse();
+
+    googleRegisterUser({ idToken });
+  };
 
   onUserRegister = (values) => {
     const {
@@ -87,9 +95,21 @@ class Register extends Component {
 
             <div className="form-side">
               <NavLink to="/" className="white">
-                <span className="logo-single" />
+                <span className="logo-single mb-5" />
               </NavLink>
-              <CardTitle className="mb-4">Register</CardTitle>
+              <div className="w-100 text-center">
+                <GoogleLogin
+                  clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                  onSuccess={this.onGoogleSignup}
+                  theme="dark"
+                  cookiePolicy="single_host_origin"
+                >
+                  <span className="mx-5">Sign up with Google</span>
+                </GoogleLogin>
+              </div>
+              <CardTitle className="text-center font-weight-semibold my-4">
+                Or sign up with your email
+              </CardTitle>
               <Formik
                 innerRef={this.formRef}
                 initialValues={initialValues}
@@ -193,6 +213,7 @@ class Register extends Component {
 Register.propTypes = {
   currentUser: PropTypes.object.isRequired,
   registerUser: PropTypes.func.isRequired,
+  googleRegisterUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -201,6 +222,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   registerUser: ({ firstName, lastName, email, password }) =>
     dispatch(register({ firstName, lastName, email, password })),
+  googleRegisterUser: ({ idToken }) => dispatch(googleRegister({ idToken })),
 });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'register', saga });

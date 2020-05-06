@@ -6,8 +6,9 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { login } from 'containers/App/actions';
+import { login, googleLogin } from 'containers/App/actions';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { LOGIN_SCHEMA } from 'utils/constants';
 import injectSaga from 'utils/injectSaga';
@@ -16,6 +17,13 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { loginMainSaga as saga } from './saga';
 
 class Login extends Component {
+  onGoogleLogin = (response) => {
+    const { googleLoginUser } = this.props;
+    const { id_token: idToken } = response.getAuthResponse();
+
+    googleLoginUser({ idToken });
+  };
+
   onUserLogin = (values) => {
     const {
       currentUser: { loading },
@@ -63,9 +71,21 @@ class Login extends Component {
 
             <div className="form-side">
               <NavLink to="/" className="white">
-                <span className="logo-single" />
+                <span className="logo-single mb-4" />
               </NavLink>
-              <CardTitle className="mb-4">Login</CardTitle>
+              <div className="w-100 text-center">
+                <GoogleLogin
+                  clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                  onSuccess={this.onGoogleLogin}
+                  theme="dark"
+                  cookiePolicy="single_host_origin"
+                >
+                  <span className="mx-5">Sign in with Google</span>
+                </GoogleLogin>
+              </div>
+              <CardTitle className="text-center font-weight-semibold my-4">
+                Or sign in with your email
+              </CardTitle>
               <Formik
                 initialValues={initialValues}
                 validationSchema={LOGIN_SCHEMA}
@@ -133,6 +153,7 @@ class Login extends Component {
 Login.propTypes = {
   currentUser: PropTypes.object.isRequired,
   loginUser: PropTypes.func.isRequired,
+  googleLoginUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -141,6 +162,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   loginUser: ({ email, password }) => dispatch(login({ email, password })),
+  googleLoginUser: ({ idToken }) => dispatch(googleLogin({ idToken })),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

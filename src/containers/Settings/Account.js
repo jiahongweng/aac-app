@@ -67,7 +67,7 @@ class Account extends Component {
     const initialValues = {
       firstName,
       lastName,
-      phone,
+      phone: phone || '',
       oldPassword: '',
       password: '',
       confirmPassword: '',
