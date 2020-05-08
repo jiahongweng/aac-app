@@ -5,27 +5,38 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
+import Intercom from 'react-intercom';
 import NotificationContainer from 'components/common/notifications/NotificationContainer';
 import routes from './routes';
-import { makeSelectIsAuthenticated } from './selectors';
+import { makeSelectIsAuthenticated, makeSelectCurrentUser } from './selectors';
 
-const App = ({ isAuthenticated }) => (
+const App = ({ isAuthenticated, currentUser: { data: currentUserData } }) => (
   <div className="h-100">
     <NotificationContainer />
     <Helmet>
       <meta name="description" content="AAC" />
       <title>AAC</title>
     </Helmet>
+    {isAuthenticated && currentUserData && (
+      <Intercom
+        appID={process.env.REACT_APP_INTERCOM_ID}
+        user_id={currentUserData.id}
+        email={currentUserData.email}
+        name={`${currentUserData.firstName} ${currentUserData.lastName}`}
+      />
+    )}
     {routes(isAuthenticated)}
   </div>
 );
 
 App.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   isAuthenticated: makeSelectIsAuthenticated(),
+  currentUser: makeSelectCurrentUser(),
 });
 const mapDispatchToProps = {};
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
