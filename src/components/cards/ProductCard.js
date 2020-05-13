@@ -13,7 +13,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { SS_ACTIVEWARE } from 'utils/constants';
 
 const ProductCard = ({ product, isSelect, onClickItem }) => (
-  <Colxx sm="6" lg="4" xl="3" xxl="2" className="mb-3" key={product.id}>
+  <Colxx xs="6" md="4" xl="3" xxl="2" className="mb-3" key={product.id}>
     <Card
       onClick={(event) => onClickItem(event, product.id)}
       className={classnames({
