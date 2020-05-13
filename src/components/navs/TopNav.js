@@ -102,7 +102,7 @@ class TopNav extends Component {
     }, 350);
     this.props.setContainerClassnames(
       // eslint-disable-next-line no-param-reassign
-      ++menuClickCount, // eslint-disable-line no-plusplus
+      ++menuClickCount,
       containerClassnames,
       this.props.selectedMenuHasSubItems,
     );

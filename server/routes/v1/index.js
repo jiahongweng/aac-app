@@ -3,6 +3,8 @@ import passport from 'passport';
 import authRoutes from './AuthRoutes';
 import userRoutes from './UserRoutes';
 import organizationRoutes from './OrganizationRoutes';
+import productRoutes from './ProductRoute';
+import ssaRoutes from './SSARoute';
 
 const router = express.Router();
 
@@ -33,5 +35,19 @@ router.use(
   passport.authenticate('jwt', { session: false }),
   organizationRoutes,
 );
+
+/**
+ * Products
+ */
+router.use(
+  '/products',
+  passport.authenticate('jwt', { session: false }),
+  productRoutes,
+);
+
+/**
+ * S&S Activewear
+ */
+router.use('/ssa', passport.authenticate('jwt', { session: false }), ssaRoutes);
 
 export default router;

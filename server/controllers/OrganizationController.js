@@ -12,7 +12,6 @@ class OrganizationController {
     try {
       const { page = 0, limit = PAGE_PER_NUM } = parseRequestQuery(req.query);
       const { order, orderBy } = req.query;
-      console.log({ order, orderBy, page, limit });
       const {
         count: totalCount,
         rows: allOrganizations,
@@ -22,6 +21,7 @@ class OrganizationController {
         page,
         limit,
       });
+
       util.setSuccess(httpStatus.OK, {
         total: totalCount,
         page,

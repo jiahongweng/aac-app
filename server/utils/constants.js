@@ -12,6 +12,11 @@ export const STATUSES = {
   INACTIVE: 0,
 };
 
+export const SS_ACTIVEWARE = {
+  API_BASE: 'https://api.ssactivewear.com/v2',
+  CDN_BASE: 'https://cdn.ssactivewear.com',
+};
+
 export const ERROR_MESSAGES = {
   API_NOT_FOUND: 'API not found.',
   INCOMPLETE_REQUEST: 'Please provide all required fields.',
@@ -34,4 +39,6 @@ export const ERROR_MESSAGES = {
   ORGANIZATION_NOT_FOUND_WITH_ID: (organizationId) =>
     `Cannot find organization with the id: ${organizationId}`,
   ORGANIZATION_ALEADY_EXIST_WITH_USER: 'User has an organization already.',
+  PRODUCT_NOT_FOUND_WITH_ID: (ProductId) =>
+    `Cannot find product with the id: ${ProductId}`,
 };

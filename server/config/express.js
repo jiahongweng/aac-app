@@ -10,6 +10,7 @@ import routes from '../routes/v1';
 import errorHandler from '../middlewares/error.middleware';
 
 require('./passport');
+require('./cron');
 
 /**
  * Express instance

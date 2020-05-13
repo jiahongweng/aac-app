@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
-import Intercom from 'react-intercom';
+import { ReactIntercom } from 'react-intercom';
 import NotificationContainer from 'components/common/notifications/NotificationContainer';
 import routes from './routes';
 import { makeSelectIsAuthenticated, makeSelectCurrentUser } from './selectors';
@@ -18,8 +18,8 @@ const App = ({ isAuthenticated, currentUser: { data: currentUserData } }) => (
       <title>AAC</title>
     </Helmet>
     {isAuthenticated && currentUserData && (
-      <Intercom
-        appID={process.env.REACT_APP_INTERCOM_ID}
+      <ReactIntercom
+        app_id={process.env.REACT_APP_INTERCOM_ID}
         user_id={currentUserData.id}
         email={currentUserData.email}
         name={`${currentUserData.firstName} ${currentUserData.lastName}`}

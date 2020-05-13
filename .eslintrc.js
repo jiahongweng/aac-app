@@ -68,6 +68,7 @@ module.exports = {
     'no-bitwise': 0,
     'no-confusing-arrow': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 1 : 0,
+    'no-plusplus': 0,
     'no-underscore-dangle': 0,
     'no-unused-vars': 2,
     'no-use-before-define': 0,

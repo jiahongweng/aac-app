@@ -26,6 +26,13 @@ export const MENU_ITEMS = [
     permission: [ROLES.ADMIN],
   },
   {
+    id: 'products',
+    icon: 'iconsminds-blouse',
+    label: 'Products',
+    to: '/products',
+    permission: [ROLES.ADMIN],
+  },
+  {
     id: 'orders',
     icon: 'iconsminds-checkout',
     label: 'Orders',
@@ -41,6 +48,8 @@ export const BREADCRUMB_ITEMS = {
   'breadcrumb.settings': 'Settings',
   'breadcrumb.account': 'Account',
   'breadcrumb.organization': 'Organization',
+  'breadcrumb.products': 'Products',
+  'breadcrumb.add-product': 'Add products',
 };
 
 export const MENU_SET_CLASSNAMES = 'Menu/SET_CLASSNAMES';

@@ -15,7 +15,6 @@ export function* appApiSaga(options, successHandlers, errorHandler) {
       ...getAuthHeader(),
     };
     const response = yield call(request, options);
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < successHandlers.length; i++) {
       yield put(successHandlers[i](response.data));
     }

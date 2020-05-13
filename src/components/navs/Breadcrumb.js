@@ -45,7 +45,7 @@ BreadcrumbItems.propTypes = {
 
 const BreadcrumbContainer = ({ heading, match }) => (
   <>
-    {heading && <h1>{getBreadcrumbTitle(heading)}</h1>}
+    {heading && <h1 className="p-0">{getBreadcrumbTitle(heading)}</h1>}
     <BreadcrumbItems match={match} />
   </>
 );

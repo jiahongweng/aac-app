@@ -5,6 +5,11 @@ export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
+export const SS_ACTIVEWARE = {
+  API_BASE: 'https://api.ssactivewear.com/v2',
+  CDN_BASE: 'https://cdn.ssactivewear.com',
+};
+
 export const ROLES = {
   ADMIN: 2,
   CLIENT: 1,

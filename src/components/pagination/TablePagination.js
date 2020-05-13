@@ -1,4 +1,3 @@
-/* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
