@@ -50,7 +50,7 @@ class SSAService {
       const style = await database.SSA_Style.findOne({
         where: { styleId: Number(styleId) },
         attributes: {
-          exclude: ['createdAt', 'updatedAt'],
+          exclude: ['id', 'createdAt', 'updatedAt'],
         },
       });
 

@@ -1,4 +1,6 @@
 'use strict';
+import { ERROR_MESSAGES } from '../../utils/constants';
+
 module.exports = (sequelize, DataTypes) => {
   const Product = sequelize.define(
     'Product',
@@ -6,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       styleId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: {
+          msg: ERROR_MESSAGES.PRODUCT_ALEADY_TAKEN,
+        },
       },
       styleName: {
         type: DataTypes.STRING,

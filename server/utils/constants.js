@@ -39,6 +39,9 @@ export const ERROR_MESSAGES = {
   ORGANIZATION_NOT_FOUND_WITH_ID: (organizationId) =>
     `Cannot find organization with the id: ${organizationId}`,
   ORGANIZATION_ALEADY_EXIST_WITH_USER: 'User has an organization already.',
+  PRODUCT_ALEADY_TAKEN: 'We have this product in the AAC product list already.',
   PRODUCT_NOT_FOUND_WITH_ID: (ProductId) =>
     `Cannot find product with the id: ${ProductId}`,
+  PRODUCT_NOT_FOUND_WITH_Style_ID: (StyleId) =>
+    `Cannot find product with the style id: ${StyleId}`,
 };

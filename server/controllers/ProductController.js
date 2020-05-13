@@ -40,8 +40,8 @@ class ProductController {
       !req.body.styleName ||
       !req.body.styleImage ||
       !req.body.brandName ||
-      !req.body.title ||
-      !req.body.description
+      !req.body.brandImage ||
+      !req.body.title
     ) {
       util.setError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INCOMPLETE_REQUEST);
       return util.send(res);
@@ -51,8 +51,9 @@ class ProductController {
       styleName,
       styleImage,
       brandName,
+      brandImage,
       title,
-      description,
+      description = '',
     } = req.body;
 
     try {
@@ -61,6 +62,7 @@ class ProductController {
         styleName,
         styleImage,
         brandName,
+        brandImage,
         title,
         description,
       });
@@ -156,6 +158,37 @@ class ProductController {
         util.setError(
           httpStatus.NOT_FOUND,
           ERROR_MESSAGES.PRODUCT_NOT_FOUND_WITH_ID(id),
+        );
+      }
+    } catch (error) {
+      util.setError(httpStatus.BAD_REQUEST, error.message);
+    }
+
+    return util.send(res);
+  }
+
+  static async deleteProductByStyle(req, res) {
+    const { styleId } = req.params;
+
+    if (!Number(styleId)) {
+      util.setError(
+        httpStatus.NOT_ACCEPTABLE,
+        ERROR_MESSAGES.INVALID_NUMERIC_VALUE,
+      );
+      return util.send(res);
+    }
+
+    try {
+      const productToDelete = await ProductService.deleteProductByStyle(
+        styleId,
+      );
+
+      if (productToDelete) {
+        util.setSuccess(httpStatus.OK);
+      } else {
+        util.setError(
+          httpStatus.NOT_FOUND,
+          ERROR_MESSAGES.PRODUCT_NOT_FOUND_WITH_Style_ID(styleId),
         );
       }
     } catch (error) {

@@ -15,6 +15,7 @@ import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { ProductImagesCarousel } from 'components/carousel';
 import { ProductColorSwatch } from 'components/swatches';
+import { ACTIONS, SUCCESS_MESSAGES } from 'utils/constants';
 
 const productImageCategories = [
   {
@@ -36,7 +37,7 @@ class ProductModal extends Component {
     super(props);
 
     this.state = {
-      submiting: false,
+      fetching: true,
       selectedColor: null,
     };
   }
@@ -47,39 +48,85 @@ class ProductModal extends Component {
     } = prevProps;
     const {
       isOpen,
+      mode,
       product: { loading, error },
       toggle,
     } = this.props;
-    const { submiting } = this.state;
+    const { fetching } = this.state;
 
     if (isOpen) {
       if (error) {
         NotificationManager.error(error.message, 'Error');
-      } else if (prevLoading && !loading && submiting) {
-        toggle();
+      } else if (prevLoading && !loading) {
+        if (!fetching) {
+          if (mode === ACTIONS.CREATE) {
+            NotificationManager.success(
+              SUCCESS_MESSAGES.CREATE_PRODUCT_SUCCESS,
+              'Success',
+            );
+            toggle(null);
+          } else {
+            NotificationManager.info(
+              SUCCESS_MESSAGES.DELETE_PRODUCT_SUCCESS,
+              'Note',
+            );
+            toggle(null, true);
+          }
+        } else {
+          this.onFetchingDone();
+        }
       }
     }
     return false;
   }
 
+  onFetchingDone() {
+    this.setState({ fetching: false });
+  }
+
   onOpened = () => {
     const { fetchSelectedProduct, styleId } = this.props;
 
-    fetchSelectedProduct({ styleId });
-
-    this.setState({ submiting: false });
+    this.setState({ fetching: true }, () => {
+      fetchSelectedProduct({ styleId });
+    });
   };
 
   onClosed = () => {
-    this.setState({ submiting: false, selectedColor: null });
     this.props.initProduct();
+    this.setState({ selectedColor: null });
   };
 
   onSubmit = () => {
-    const { styleId, createNewProduct } = this.props;
-    createNewProduct({ styleId });
+    const {
+      styleId,
+      mode,
+      createNewProduct,
+      deleteSelectedProduct,
+      product: { data: productData },
+    } = this.props;
 
-    this.setState({ submiting: true });
+    if (mode === ACTIONS.CREATE) {
+      const {
+        styleName,
+        styleImage,
+        brandName,
+        brandImage,
+        title,
+        description,
+      } = productData;
+      createNewProduct({
+        styleId,
+        styleName,
+        styleImage,
+        brandName,
+        brandImage,
+        title,
+        description,
+      });
+    } else if (mode === ACTIONS.DELETE) {
+      deleteSelectedProduct({ styleId });
+    }
   };
 
   onSelectProductColor = (color) => {
@@ -90,14 +137,13 @@ class ProductModal extends Component {
     const {
       isOpen,
       product: {
-        loading,
         data: { styleImage, details: productData },
       },
     } = this.props;
-    const { selectedColor } = this.state;
+    const { fetching, selectedColor } = this.state;
     const images = [];
 
-    if (isOpen && !loading && productData) {
+    if (isOpen && !fetching && productData) {
       if (selectedColor) {
         productImageCategories.forEach((img) => {
           if (productData[`${selectedColor}`][`color${img.label}Image`]) {
@@ -126,12 +172,12 @@ class ProductModal extends Component {
     const {
       isOpen,
       product: {
-        loading,
         data: { details: productData },
       },
     } = this.props;
+    const { fetching } = this.state;
 
-    if (isOpen && !loading && productData) {
+    if (isOpen && !fetching && productData) {
       return Object.values(
         productData,
       ).map(({ color, colorName, colorSwatchTextColor, colorSwatchImage }) => (
@@ -154,13 +200,12 @@ class ProductModal extends Component {
     const {
       isOpen,
       product: {
-        loading,
         data: { specs: specsData, details: productData },
       },
     } = this.props;
-    const { selectedColor } = this.state;
+    const { fetching, selectedColor } = this.state;
 
-    if (isOpen && !loading && specsData) {
+    if (isOpen && !fetching && specsData) {
       const tableColumns = Object.values(specsData).reduce((accur, item) => {
         Object.keys(item).forEach((size) => {
           // eslint-disable-next-line no-param-reassign
@@ -216,21 +261,23 @@ class ProductModal extends Component {
   render() {
     const {
       isOpen,
+      mode,
       toggle,
-      product: { loading = true, data: productData },
+      product: { loading, data: productData },
     } = this.props;
+    const { fetching = true } = this.state;
 
     return (
       <>
         <Modal
           isOpen={isOpen}
           toggle={toggle}
-          onOpened={this.onOpened}
-          onClosed={this.onClosed}
+          onEnter={this.onOpened}
+          onExit={this.onClosed}
           wrapClassName="modal-right"
           size="lg"
         >
-          {loading ? (
+          {fetching ? (
             <div className="loading" />
           ) : (
             <>
@@ -261,27 +308,31 @@ class ProductModal extends Component {
                   </Colxx>
                 </Row>
               </ModalBody>
-              <ModalFooter>
-                <Button color="secondary" size="lg" outline onClick={toggle}>
-                  Cancel
-                </Button>
-                <Button
-                  type="button"
-                  color="primary"
-                  size="lg"
-                  className={`btn-shadow btn-multiple-state ${
-                    loading ? 'show-spinner' : ''
-                  }`}
-                  onClick={this.onSubmit}
-                >
-                  <span className="spinner d-inline-block">
-                    <span className="bounce1" />
-                    <span className="bounce2" />
-                    <span className="bounce3" />
-                  </span>
-                  <span className="label">Delete</span>
-                </Button>
-              </ModalFooter>
+              {(mode === ACTIONS.CREATE || mode === ACTIONS.DELETE) && (
+                <ModalFooter>
+                  <Button color="secondary" size="lg" outline onClick={toggle}>
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    color={mode === ACTIONS.CREATE ? 'primary' : 'danger'}
+                    size="lg"
+                    className={`btn-shadow btn-multiple-state ${
+                      loading ? 'show-spinner' : ''
+                    }`}
+                    onClick={this.onSubmit}
+                  >
+                    <span className="spinner d-inline-block">
+                      <span className="bounce1" />
+                      <span className="bounce2" />
+                      <span className="bounce3" />
+                    </span>
+                    <span className="label">
+                      {mode === ACTIONS.CREATE ? 'Add' : 'Delete'}
+                    </span>
+                  </Button>
+                </ModalFooter>
+              )}
             </>
           )}
         </Modal>
@@ -295,7 +346,9 @@ ProductModal.propTypes = {
   initProduct: PropTypes.func.isRequired,
   fetchSelectedProduct: PropTypes.func.isRequired,
   createNewProduct: PropTypes.func.isRequired,
+  deleteSelectedProduct: PropTypes.func.isRequired,
   styleId: PropTypes.number,
+  mode: PropTypes.string.isRequired,
   isOpen: PropTypes.bool,
   toggle: PropTypes.func,
 };

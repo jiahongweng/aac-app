@@ -6,9 +6,9 @@ import {
   CREATE_PRODUCT,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
-  UPDATE_PRODUCT,
-  UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_ERROR,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_ERROR,
 } from './constants';
 
 export const initialState = {
@@ -26,7 +26,6 @@ function productReducer(state = initialState, action) {
     case INIT_PRODUCT:
       return initialState;
     case FETCH_PRODUCT:
-    case CREATE_PRODUCT:
       return {
         product: {
           loading: true,
@@ -34,7 +33,8 @@ function productReducer(state = initialState, action) {
           data: false,
         },
       };
-    case UPDATE_PRODUCT:
+    case CREATE_PRODUCT:
+    case DELETE_PRODUCT:
       return {
         product: {
           ...state.product,
@@ -44,7 +44,6 @@ function productReducer(state = initialState, action) {
       };
     case FETCH_PRODUCT_SUCCESS:
     case CREATE_PRODUCT_SUCCESS:
-    case UPDATE_PRODUCT_SUCCESS:
       return {
         product: {
           loading: false,
@@ -52,8 +51,14 @@ function productReducer(state = initialState, action) {
           data,
         },
       };
+    case DELETE_PRODUCT_SUCCESS:
+      return {
+        product: {
+          ...state.product,
+          loading: false,
+        },
+      };
     case FETCH_PRODUCT_ERROR:
-    case CREATE_PRODUCT_ERROR:
       return {
         product: {
           loading: false,
@@ -61,7 +66,8 @@ function productReducer(state = initialState, action) {
           data: false,
         },
       };
-    case UPDATE_PRODUCT_ERROR:
+    case CREATE_PRODUCT_ERROR:
+    case DELETE_PRODUCT_ERROR:
       return {
         product: {
           ...state.product,

@@ -1,14 +1,14 @@
 import { call, fork, takeLatest } from 'redux-saga/effects';
 import { appApiSaga } from 'containers/App/saga';
 import { makeJsonRequestOptions } from 'utils/request';
-import { FETCH_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from './constants';
+import { FETCH_PRODUCT, CREATE_PRODUCT, DELETE_PRODUCT } from './constants';
 import {
   fetchProductSucceeded,
   fetchProductFailed,
   createProductSucceeded,
   createProductFailed,
-  updateProductSucceeded,
-  updateProductFailed,
+  deleteProductSucceeded,
+  deleteProductFailed,
 } from './actions';
 
 /**
@@ -37,13 +37,22 @@ export function* createProduct(action) {
     styleName,
     styleImage,
     brandName,
+    brandImage,
     title,
     description,
   } = action.payload;
   const options = makeJsonRequestOptions({
     method: 'POST',
     requestUrlPath: 'products',
-    data: { styleId, styleName, styleImage, brandName, title, description },
+    data: {
+      styleId,
+      styleName,
+      styleImage,
+      brandName,
+      brandImage,
+      title,
+      description,
+    },
   });
 
   yield call(
@@ -59,42 +68,25 @@ export function* createProductWatcher() {
 }
 
 /**
- * UPDATE_PRODUCT saga
+ * DELETE_PRODUCT saga
  */
-export function* updateProduct(action) {
-  const {
-    id,
-    styleId,
-    styleName,
-    styleImage,
-    brandName,
-    title,
-    description,
-  } = action.payload;
-  const data = {
-    styleId,
-    styleName,
-    styleImage,
-    brandName,
-    title,
-    description,
-  };
+export function* deleteProduct(action) {
+  const { styleId } = action.payload;
   const options = makeJsonRequestOptions({
-    method: 'PUT',
-    requestUrlPath: `products/${id}`,
-    data,
+    method: 'DELETE',
+    requestUrlPath: `products/delete_by_style/${styleId}`,
   });
 
   yield call(
     appApiSaga,
     options,
-    [updateProductSucceeded],
-    updateProductFailed,
+    [deleteProductSucceeded],
+    deleteProductFailed,
   );
 }
 
-export function* updateProductWatcher() {
-  yield takeLatest(UPDATE_PRODUCT, updateProduct);
+export function* deleteProductWatcher() {
+  yield takeLatest(DELETE_PRODUCT, deleteProduct);
 }
 
 /**
@@ -103,5 +95,5 @@ export function* updateProductWatcher() {
 export default function* productMainSaga() {
   yield fork(fetchProductWatcher);
   yield fork(createProductWatcher);
-  yield fork(updateProductWatcher);
+  yield fork(deleteProductWatcher);
 }

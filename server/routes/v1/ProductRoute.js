@@ -19,4 +19,8 @@ router
   .put(checkRole([ROLES.ADMIN]), ProductController.updateProduct)
   .delete(checkRole([ROLES.ADMIN]), ProductController.deleteProduct);
 
+router
+  .route('/delete_by_style/:styleId')
+  .delete(checkRole([ROLES.ADMIN]), ProductController.deleteProductByStyle);
+
 export default router;

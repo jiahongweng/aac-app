@@ -11,6 +11,7 @@ module.exports = {
       styleId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true,
       },
       styleName: {
         type: Sequelize.STRING,

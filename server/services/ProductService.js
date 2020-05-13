@@ -81,6 +81,25 @@ class ProductService {
       throw error;
     }
   }
+
+  static async deleteProductByStyle(styleId) {
+    try {
+      const productToDelete = await database.Product.findOne({
+        where: { styleId: Number(styleId) },
+      });
+
+      if (productToDelete) {
+        const deletedProduct = await database.Product.destroy({
+          where: { styleId: Number(styleId) },
+        });
+
+        return deletedProduct;
+      }
+      return null;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default ProductService;

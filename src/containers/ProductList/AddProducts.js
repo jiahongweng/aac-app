@@ -16,9 +16,9 @@ import { Breadcrumb } from 'components/navs';
 import { ProductCard } from 'components/cards';
 import { ListPagination } from 'components/pagination';
 import injectSaga from 'utils/injectSaga';
-import { ROLES } from 'utils/constants';
+import { ROLES, ACTIONS } from 'utils/constants';
 import { fetchSsaProducts } from './actions';
-import { makeSelectSsaProducts, makeSelectNeedRefresh } from './selectors';
+import { makeSelectSsaProducts } from './selectors';
 import { DEFAULT_PAGE_SIZE } from './constants';
 import { ssaProductListMainSaga as saga } from './saga';
 
@@ -27,7 +27,6 @@ class AddProducts extends Component {
     super(props);
 
     this.state = {
-      needRefresh: false,
       searchKey: '',
       filterBrannd: '',
       modalOpen: false,
@@ -65,16 +64,19 @@ class AddProducts extends Component {
     });
   };
 
-  openModal = (styleId = null) => {
+  openModal = (e, styleId = null) => {
+    e.persist();
+
     this.setState({ styleId });
     this.toggleModal();
   };
 
-  toggleModal = (needRefresh = false) => {
+  toggleModal = (e) => {
+    if (e) e.persist();
+
     this.setState((prevState) => ({
       ...prevState,
       modalOpen: !prevState.modalOpen,
-      needRefresh,
     }));
   };
 
@@ -159,14 +161,17 @@ class AddProducts extends Component {
             <ProductCard
               key={product.styleId}
               product={product}
-              onClickItem={() => this.openModal(product.styleId)}
+              onClickItem={(e) => this.openModal(e, product.styleId)}
             />
           ))}
-          <ProductModal
-            styleId={styleId}
-            isOpen={modalOpen}
-            toggle={this.toggleModal}
-          />
+          {modalOpen && (
+            <ProductModal
+              styleId={styleId}
+              mode={ACTIONS.CREATE}
+              isOpen={modalOpen}
+              toggle={this.toggleModal}
+            />
+          )}
           <ListPagination
             currentPage={page + 1}
             totalPage={Math.ceil(total / limit)}
@@ -217,7 +222,6 @@ AddProducts.propTypes = {
 const mapStateToProps = createStructuredSelector({
   currentUser: makeSelectCurrentUser(),
   ssaProducts: makeSelectSsaProducts(),
-  needRefresh: makeSelectNeedRefresh(),
 });
 const mapDispatchToProps = (dispatch) => ({
   fetchSsaProductList: ({ search, brand, page, limit }) =>

@@ -7,7 +7,7 @@ import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
 import { ListPagination } from 'components/pagination';
-import { ROLES } from 'utils/constants';
+import { ROLES, ACTIONS } from 'utils/constants';
 import { ProductCard } from 'components/cards';
 import { DEFAULT_PAGE_SIZE } from './constants';
 
@@ -16,7 +16,6 @@ class ProductList extends Component {
     super(props);
 
     this.state = {
-      needRefresh: false,
       modalOpen: false,
       styleId: null,
       page: 0,
@@ -45,17 +44,25 @@ class ProductList extends Component {
     });
   };
 
-  openModal = (styleId = null) => {
-    this.setState({ styleId });
-    this.toggleModal();
+  openModal = (e, styleId = null) => {
+    e.persist();
+
+    this.setState({ styleId }, () => {
+      this.toggleModal(e);
+    });
   };
 
-  toggleModal = (needRefresh = false) => {
+  toggleModal = (e, needRefresh = false) => {
+    if (e) e.persist();
+
     this.setState((prevState) => ({
       ...prevState,
       modalOpen: !prevState.modalOpen,
-      needRefresh,
     }));
+
+    if (needRefresh) {
+      this.fetchProducts();
+    }
   };
 
   render() {
@@ -100,14 +107,17 @@ class ProductList extends Component {
             <ProductCard
               key={product.id}
               product={product}
-              onClickItem={() => this.openModal(product.styleId)}
+              onClickItem={(e) => this.openModal(e, product.styleId)}
             />
           ))}
-          <ProductModal
-            styleId={styleId}
-            isOpen={modalOpen}
-            toggle={this.toggleModal}
-          />
+          {modalOpen && (
+            <ProductModal
+              styleId={styleId}
+              mode={ACTIONS.DELETE}
+              isOpen={modalOpen}
+              toggle={this.toggleModal}
+            />
+          )}
           <ListPagination
             currentPage={page + 1}
             totalPage={Math.ceil(total / limit)}

@@ -4,7 +4,12 @@ import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectCurrentUser } from 'containers/App/selectors';
-import { initProduct, fetchProduct, createProduct } from './actions';
+import {
+  initProduct,
+  fetchProduct,
+  createProduct,
+  deleteProduct,
+} from './actions';
 import { makeselectProduct } from './selectors';
 import saga from './saga';
 import ProductModal from './ProductModal';
@@ -21,6 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
     styleName,
     styleImage,
     brandName,
+    brandImage,
     title,
     description,
   }) =>
@@ -30,8 +36,15 @@ const mapDispatchToProps = (dispatch) => ({
         styleName,
         styleImage,
         brandName,
+        brandImage,
         title,
         description,
+      }),
+    ),
+  deleteSelectedProduct: ({ styleId }) =>
+    dispatch(
+      deleteProduct({
+        styleId,
       }),
     ),
 });

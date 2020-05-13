@@ -6,9 +6,9 @@ import {
   CREATE_PRODUCT,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
-  UPDATE_PRODUCT,
-  UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_ERROR,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_ERROR,
 } from './constants';
 
 /**
@@ -72,12 +72,21 @@ export function createProduct({
   styleName,
   styleImage,
   brandName,
+  brandImage,
   title,
   description,
 }) {
   return {
     type: CREATE_PRODUCT,
-    payload: { styleId, styleName, styleImage, brandName, title, description },
+    payload: {
+      styleId,
+      styleName,
+      styleImage,
+      brandName,
+      brandImage,
+      title,
+      description,
+    },
   };
 }
 
@@ -110,57 +119,43 @@ export function createProductFailed(error) {
 }
 
 /**
- * Update product, this action starts the request saga
+ * Delete product, this action starts the request saga
  *
- * @return {object} An action object with a type of UPDATE_PRODUCT
+ * @return {object} An action object with a type of DELETE_PRODUCT
  */
-export function updateProduct({
-  id,
-  styleId,
-  styleName,
-  styleImage,
-  brandName,
-  title,
-  description,
-}) {
+export function deleteProduct({ styleId }) {
   return {
-    type: UPDATE_PRODUCT,
+    type: DELETE_PRODUCT,
     payload: {
-      id,
       styleId,
-      styleName,
-      styleImage,
-      brandName,
-      title,
-      description,
     },
   };
 }
 
 /**
- * Dispatched when the product is updated by the request saga
+ * Dispatched when the product is deleted by the request saga
  *
- * @param  {object} product updated product info
+ * @param  {object} product deleted product info
  *
- * @return {object} An action object with a type of UPDATE_PRODUCT_SUCCESS passing the product
+ * @return {object} An action object with a type of DELETE_PRODUCT_SUCCESS passing the product
  */
-export function updateProductSucceeded({ data }) {
+export function deleteProductSucceeded({ data }) {
   return {
-    type: UPDATE_PRODUCT_SUCCESS,
+    type: DELETE_PRODUCT_SUCCESS,
     payload: { data },
   };
 }
 
 /**
- * Dispatched when updating product fails
+ * Dispatched when deleting product fails
  *
  * @param  {object} error The error
  *
- * @return {object} An action object with a type of UPDATE_PRODUCT_ERROR passing the error
+ * @return {object} An action object with a type of DELETE_PRODUCT_ERROR passing the error
  */
-export function updateProductFailed(error) {
+export function deleteProductFailed(error) {
   return {
-    type: UPDATE_PRODUCT_ERROR,
+    type: DELETE_PRODUCT_ERROR,
     payload: { error },
   };
 }
