@@ -139,7 +139,8 @@ export const SUCCESS_MESSAGES = {
   UPDATE_ORGANIZATION_SUCCESS: 'Orgamization saved successfully.',
   CREATE_USER_SUCCESS: 'User created successfully.',
   UPDATE_USER_SUCCESS: 'User updated successfully.',
-  CREATE_PRODUCT_SUCCESS: 'Product has been added to AAC products successfully.',
+  CREATE_PRODUCT_SUCCESS:
+    'Product has been added to AAC products successfully.',
   DELETE_PRODUCT_SUCCESS:
     'Product has been deleted from AAC products successfully.',
 };

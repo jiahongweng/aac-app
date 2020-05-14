@@ -62,7 +62,6 @@ const NotFound = React.lazy(() =>
 
 const ControlledRoute = ({
   component: Component,
-  layout: Layout,
   shouldLoad,
   unloadRedirectTo,
   ...rest
@@ -70,12 +69,7 @@ const ControlledRoute = ({
   <Route
     {...rest}
     render={(props) => {
-      if (shouldLoad)
-        return (
-          <Layout>
-            <Component {...props} />
-          </Layout>
-        );
+      if (shouldLoad) return <Component {...props} />;
       return <Redirect to={{ pathname: unloadRedirectTo }} />;
     }}
   />
@@ -86,97 +80,120 @@ const routes = (isAuthenticated) => (
     <Router>
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/login" />} />
-        <ControlledRoute
-          path="/register"
-          component={Register}
-          layout={UserLayout}
-          shouldLoad={!isAuthenticated}
-          unloadRedirectTo="/dashboard"
-        />
-        <ControlledRoute
-          path="/login"
-          component={Login}
-          layout={UserLayout}
-          shouldLoad={!isAuthenticated}
-          unloadRedirectTo="/dashboard"
-        />
-        <ControlledRoute
-          path="/activate/:code"
-          component={Activate}
-          layout={UserLayout}
-          shouldLoad={!isAuthenticated}
-          unloadRedirectTo="/dashboard"
-        />
-        <ControlledRoute
-          path="/forgot-password"
-          component={ForgotPassword}
-          layout={UserLayout}
-          shouldLoad={!isAuthenticated}
-          unloadRedirectTo="/dashboard"
-        />
-        <ControlledRoute
-          path="/reset-password/:token"
-          component={ResetPassword}
-          layout={UserLayout}
-          shouldLoad={!isAuthenticated}
-          unloadRedirectTo="/dashboard"
-        />
-        <ControlledRoute
-          exact
-          path="/dashboard"
-          component={Dashboard}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path="/users"
-          component={UserList}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path="/organizations"
-          component={OrganizationList}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path="/products"
-          component={ProductList}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path="/products/add-product"
-          component={AddProducts}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path={['/settings', '/settings/account']}
-          component={Account}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
-        <ControlledRoute
-          exact
-          path="/settings/organization"
-          component={Organization}
-          layout={AppLayout}
-          shouldLoad={isAuthenticated}
-          unloadRedirectTo="/login"
-        />
+        <Route
+          path={[
+            '/register',
+            '/login',
+            '/activate/:code',
+            '/forgot-password',
+            '/reset-password/:token',
+          ]}
+        >
+          <UserLayout>
+            <Suspense fallback={<div className="loading" />}>
+              <Switch>
+                <ControlledRoute
+                  path="/register"
+                  component={Register}
+                  shouldLoad={!isAuthenticated}
+                  unloadRedirectTo="/dashboard"
+                />
+                <ControlledRoute
+                  path="/login"
+                  component={Login}
+                  shouldLoad={!isAuthenticated}
+                  unloadRedirectTo="/dashboard"
+                />
+                <ControlledRoute
+                  path="/activate/:code"
+                  component={Activate}
+                  shouldLoad={!isAuthenticated}
+                  unloadRedirectTo="/dashboard"
+                />
+                <ControlledRoute
+                  path="/forgot-password"
+                  component={ForgotPassword}
+                  shouldLoad={!isAuthenticated}
+                  unloadRedirectTo="/dashboard"
+                />
+                <ControlledRoute
+                  path="/reset-password/:token"
+                  component={ResetPassword}
+                  shouldLoad={!isAuthenticated}
+                  unloadRedirectTo="/dashboard"
+                />
+              </Switch>
+            </Suspense>
+          </UserLayout>
+        </Route>
+        <Route
+          path={[
+            '/dashboard',
+            '/users',
+            '/organizations',
+            '/products',
+            '/products/add-product',
+            '/settings',
+            '/settings/account',
+            '/settings/organization',
+          ]}
+        >
+          <AppLayout>
+            <Suspense fallback={<div className="loading" />}>
+              <Switch>
+                <ControlledRoute
+                  exact
+                  path="/dashboard"
+                  component={Dashboard}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/users"
+                  component={UserList}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/organizations"
+                  component={OrganizationList}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/products"
+                  component={ProductList}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/products/add-product"
+                  component={AddProducts}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path={['/settings', '/settings/account']}
+                  component={Account}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/settings/organization"
+                  component={Organization}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+              </Switch>
+            </Suspense>
+          </AppLayout>
+        </Route>
         <Route component={NotFound} />
       </Switch>
     </Router>
