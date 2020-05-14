@@ -1,6 +1,6 @@
 import { ROLES } from 'utils/constants';
 
-export const DEFAULT_MENU_TYPE = 'menu-default sub-hidden'; // Force to hide sub menu for this dashboard
+export const DEFAULT_MENU_TYPE = 'menu-sub-hidden'; // Force to hide sub menu for this dashboard
 export const SUB_HIDDEN_BREAKPOINT = 1440;
 export const MENU_HIDDEN_BREAKPOINT = 768;
 
