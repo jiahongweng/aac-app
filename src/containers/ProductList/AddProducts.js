@@ -123,9 +123,7 @@ class AddProducts extends Component {
       NotificationManager.error(error.message, 'Error');
     }
 
-    return loading ? (
-      <div className="loading" />
-    ) : (
+    return (
       <>
         <Row className="app-row">
           <Colxx sm="auto">
@@ -156,57 +154,63 @@ class AddProducts extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row className="app-row">
-          {data.map((product) => (
-            <ProductCard
-              key={product.styleId}
-              product={product}
-              onClickItem={(e) => this.openModal(e, product.styleId)}
-            />
-          ))}
-          {modalOpen && (
-            <ProductModal
-              styleId={styleId}
-              mode={ACTIONS.CREATE}
-              isOpen={modalOpen}
-              toggle={this.toggleModal}
-            />
-          )}
-          <ListPagination
-            currentPage={page + 1}
-            totalPage={Math.ceil(total / limit)}
-            onChangePage={(i) => this.onChangePage(i)}
-          />
-        </Row>
-        <ApplicationMenu>
-          <PerfectScrollbar
-            options={{ suppressScrollX: true, wheelPropagation: false }}
-          >
-            <div className="p-4">
-              <p className="text-muted text-small">Brands</p>
-              <ul className="list-unstyled mb-5">
-                {Object.keys(filters).map((filter) => (
-                  <NavItem
-                    key={filter}
-                    className={classnames('py-1', {
-                      active: filter === filterBrannd,
-                    })}
-                  >
-                    <NavLink
-                      to="#"
-                      onClick={() => this.onSelectBrandFilter(filter)}
-                      location={{}}
-                    >
-                      <i className="simple-icon-check" />
-                      <span>{filter}</span>
-                      <span className="float-right">{filters[filter]}</span>
-                    </NavLink>
-                  </NavItem>
-                ))}
-              </ul>
-            </div>
-          </PerfectScrollbar>
-        </ApplicationMenu>
+        {loading ? (
+          <div className="loading" />
+        ) : (
+          <>
+            <Row className="app-row">
+              {data.map((product) => (
+                <ProductCard
+                  key={product.styleId}
+                  product={product}
+                  onClickItem={(e) => this.openModal(e, product.styleId)}
+                />
+              ))}
+              {modalOpen && (
+                <ProductModal
+                  styleId={styleId}
+                  mode={ACTIONS.CREATE}
+                  isOpen={modalOpen}
+                  toggle={this.toggleModal}
+                />
+              )}
+              <ListPagination
+                currentPage={page + 1}
+                totalPage={Math.ceil(total / limit)}
+                onChangePage={(i) => this.onChangePage(i)}
+              />
+            </Row>
+            <ApplicationMenu>
+              <PerfectScrollbar
+                options={{ suppressScrollX: true, wheelPropagation: false }}
+              >
+                <div className="p-4">
+                  <p className="text-muted text-small">Brands</p>
+                  <ul className="list-unstyled mb-5">
+                    {Object.keys(filters).map((filter) => (
+                      <NavItem
+                        key={filter}
+                        className={classnames('py-1', {
+                          active: filter === filterBrannd,
+                        })}
+                      >
+                        <NavLink
+                          to="#"
+                          onClick={() => this.onSelectBrandFilter(filter)}
+                          location={{}}
+                        >
+                          <i className="simple-icon-check" />
+                          <span>{filter}</span>
+                          <span className="float-right">{filters[filter]}</span>
+                        </NavLink>
+                      </NavItem>
+                    ))}
+                  </ul>
+                </div>
+              </PerfectScrollbar>
+            </ApplicationMenu>
+          </>
+        )}
       </>
     );
   }

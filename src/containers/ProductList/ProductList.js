@@ -80,9 +80,7 @@ class ProductList extends Component {
       NotificationManager.error(error.message, 'Error');
     }
 
-    return loading ? (
-      <div className="loading" />
-    ) : (
+    return (
       <>
         <Row>
           <Colxx xxs="auto">
@@ -102,28 +100,32 @@ class ProductList extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row>
-          {data.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onClickItem={(e) => this.openModal(e, product.styleId)}
+        {loading ? (
+          <div className="loading" />
+        ) : (
+          <Row>
+            {data.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClickItem={(e) => this.openModal(e, product.styleId)}
+              />
+            ))}
+            <ListPagination
+              currentPage={page + 1}
+              totalPage={Math.ceil(total / limit)}
+              onChangePage={(i) => this.onChangePage(i)}
             />
-          ))}
-          {modalOpen && (
-            <ProductModal
-              styleId={styleId}
-              mode={ACTIONS.DELETE}
-              isOpen={modalOpen}
-              toggle={this.toggleModal}
-            />
-          )}
-          <ListPagination
-            currentPage={page + 1}
-            totalPage={Math.ceil(total / limit)}
-            onChangePage={(i) => this.onChangePage(i)}
-          />
-        </Row>
+            {modalOpen && (
+              <ProductModal
+                styleId={styleId}
+                mode={ACTIONS.DELETE}
+                isOpen={modalOpen}
+                toggle={this.toggleModal}
+              />
+            )}
+          </Row>
+        )}
       </>
     );
   }
