@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { TopNav, SideBar, Footer } from 'components/navs';
+import { makeSelectContainerClassnames } from 'components/navs/selectors';
 
 class AppLayout extends Component {
   componentDidMount() {
@@ -15,11 +18,19 @@ class AppLayout extends Component {
   }
 
   render() {
-    const { containerClassnames } = this.props;
+    const {
+      containerClassnames,
+      currentUser: { data: currentUserData },
+    } = this.props;
+
     return (
       <div id="app-container" className={containerClassnames}>
-        <TopNav history={this.props.history} />
-        <SideBar />
+        {currentUserData && (
+          <>
+            <TopNav history={this.props.history} />
+            <SideBar />
+          </>
+        )}
         <main>
           <div className="container-fluid">{this.props.children}</div>
         </main>
@@ -31,6 +42,7 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {
   containerClassnames: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   children: PropTypes.node,
 };
@@ -39,10 +51,10 @@ AppLayout.defaultProps = {
   children: null,
 };
 
-const mapStateToProps = ({ menu }) => {
-  const { containerClassnames } = menu;
-  return { containerClassnames };
-};
+const mapStateToProps = createStructuredSelector({
+  containerClassnames: makeSelectContainerClassnames(),
+  currentUser: makeSelectCurrentUser(),
+});
 const mapDispatchToProps = {};
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 

@@ -121,6 +121,7 @@ class TopNav extends Component {
         data: { firstName, lastName, role },
       },
     } = this.props;
+
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
