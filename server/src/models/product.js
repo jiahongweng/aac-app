@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       styleId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
         unique: {
           msg: ERROR_MESSAGES.PRODUCT_ALEADY_TAKEN,
         },
@@ -38,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
   );
   Product.associate = function (models) {
     // associations can be defined here
+    Product.hasMany(models.Order, {
+      foreignKey: 'styleId',
+      as: 'products',
+    });
   };
   return Product;
 };

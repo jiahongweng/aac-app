@@ -99,6 +99,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'SET NULL',
       as: 'organization',
     });
+    User.hasMany(models.Order, {
+      foreignKey: 'userId',
+      as: 'orders',
+    });
   };
   return User;
 };

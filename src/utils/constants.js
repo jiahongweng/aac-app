@@ -20,11 +20,31 @@ export const STATUSES = {
   INACTIVE: 0,
 };
 
+export const ORDER_STATUS = [
+  {
+    name: 'Created',
+    color: 'primary',
+  },
+  {
+    name: 'Purchase Phase',
+    color: 'secondary',
+  },
+  {
+    name: 'Pre-Production',
+    color: 'info',
+  },
+  {
+    name: 'Production',
+    color: 'success',
+  },
+];
+
 export const ACTIONS = {
   NONE: '',
   CREATE: 'create',
   EDIT: 'edit',
   DELETE: 'delete',
+  SELECT: 'select',
 };
 
 const authShape = {
@@ -85,6 +105,12 @@ const addressShape = {
   state: Yup.string().required('Please enter the state'),
   zipCode: Yup.string().required('Please enter the zip code'),
 };
+const orderShape = {
+  dueDate: Yup.date()
+    .nullable()
+    .required('Please select the date')
+    .min(new Date(), 'Due date must be after today.'),
+};
 export const LOGIN_SCHEMA = Yup.object().shape(authShape);
 export const REGISTER_SCHEMA = Yup.object().shape({
   ...profileShape,
@@ -118,6 +144,9 @@ export const ORGANIZATION_SCHEMA = Yup.object().shape({
   shippingAddress: Yup.object().shape({
     ...addressShape,
   }),
+});
+export const ORDER_SCHEMA = Yup.object().shape({
+  ...orderShape,
 });
 
 export const ERROR_MESSAGES = {

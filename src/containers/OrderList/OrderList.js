@@ -1,30 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect, Link } from 'react-router-dom';
-import { Row } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
+import { Row, Button } from 'reactstrap';
 import ProductModal from 'containers/Product';
+import CreateOrderModal from 'containers/Order/CreateOrderModal';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
 import { ListPagination } from 'components/pagination';
-import { ROLES, ACTIONS } from 'utils/constants';
-import { ProductCard } from 'components/cards';
+import { ACTIONS } from 'utils/constants';
+import { OrderCard } from 'components/cards';
 import { DEFAULT_PAGE_SIZE } from './constants';
 
-class ProductList extends Component {
+class OrderList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      mode: ACTIONS.NONE,
       modalOpen: false,
-      styleId: null,
+      // needRefresh: false,
+      orderId: null,
       page: 0,
       pageSize: DEFAULT_PAGE_SIZE,
     };
   }
 
   componentDidMount() {
-    this.fetchProducts();
+    this.fetchOrders();
   }
 
   onChangePage = (page) => {
@@ -32,22 +35,22 @@ class ProductList extends Component {
       {
         page: page - 1,
       },
-      () => this.fetchProducts(),
+      () => this.fetchOrders(),
     );
   };
 
-  fetchProducts = () => {
+  fetchOrders = () => {
     const { page, pageSize: limit } = this.state;
-    this.props.fetchProductList({
+    this.props.fetchOrderList({
       page,
       limit,
     });
   };
 
-  openModal = (e, styleId = null) => {
+  openModal = (e, mode, orderId = null) => {
     e.persist();
 
-    this.setState({ styleId }, () => {
+    this.setState({ mode, orderId }, () => {
       this.toggleModal(e);
     });
   };
@@ -58,24 +61,21 @@ class ProductList extends Component {
     this.setState((prevState) => ({
       ...prevState,
       modalOpen: !prevState.modalOpen,
+      mode: prevState.modalOpen ? ACTIONS.NONE : prevState.mode,
     }));
 
     if (needRefresh) {
-      this.fetchProducts();
+      this.fetchOrders();
     }
   };
 
   render() {
     const {
-      currentUser: { data: currentUserData },
-      products: { loading, error, data = [], page, total, limit },
+      orders: { loading, error, data = [], page, total, limit },
       match,
     } = this.props;
-    const { modalOpen, styleId } = this.state;
+    const { mode, modalOpen, orderId } = this.state;
 
-    if (ROLES.ADMIN !== currentUserData.role) {
-      return <Redirect to={{ pathname: '/' }} />;
-    }
     if (error) {
       NotificationManager.error(error.message, 'Error');
     }
@@ -84,16 +84,18 @@ class ProductList extends Component {
       <>
         <Row>
           <Colxx xxs="auto">
-            <Breadcrumb heading="products" match={match} />
+            <Breadcrumb heading="orders" match={match} />
           </Colxx>
           <Colxx>
             <div className="float-right mb-2">
-              <Link
-                to="/products/add-product"
-                className="btn btn-primary btn-lg text-uppercase"
+              <Button
+                color="primary"
+                size="lg"
+                className="top-right-button text-uppercase"
+                onClick={(e) => this.openModal(e, ACTIONS.CREATE)}
               >
                 Add New
-              </Link>
+              </Button>
             </div>
           </Colxx>
           <Colxx xxs="12">
@@ -104,11 +106,13 @@ class ProductList extends Component {
           <div className="loading" />
         ) : (
           <Row>
-            {data.map((product) => (
-              <ProductCard
-                key={product.styleId}
-                product={product}
-                onClickItem={(e) => this.openModal(e, product.styleId)}
+            {data.map((order) => (
+              <OrderCard
+                key={order.orderId}
+                order={order}
+                onClickItem={(e) =>
+                  this.openModal(e, ACTIONS.EDIT, order.orderId)
+                }
               />
             ))}
             <ListPagination
@@ -116,9 +120,16 @@ class ProductList extends Component {
               totalPage={Math.ceil(total / limit)}
               onChangePage={(i) => this.onChangePage(i)}
             />
-            {modalOpen && (
+            {modalOpen && mode === ACTIONS.CREATE && (
+              <CreateOrderModal
+                mode={mode}
+                isOpen={modalOpen}
+                toggle={this.toggleModal}
+              />
+            )}
+            {modalOpen && mode === ACTIONS.EDIT && (
               <ProductModal
-                styleId={styleId}
+                orderId={orderId}
                 mode={ACTIONS.DELETE}
                 isOpen={modalOpen}
                 toggle={this.toggleModal}
@@ -131,12 +142,12 @@ class ProductList extends Component {
   }
 }
 
-ProductList.propTypes = {
+OrderList.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  products: PropTypes.object.isRequired,
-  fetchProductList: PropTypes.func.isRequired,
-  // deleteSelectedProduct: PropTypes.func.isRequired,
+  orders: PropTypes.object.isRequired,
+  fetchOrderList: PropTypes.func.isRequired,
+  deleteSelectedOrder: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
 };
 
-export default ProductList;
+export default OrderList;

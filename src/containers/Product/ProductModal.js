@@ -101,6 +101,7 @@ class ProductModal extends Component {
     const {
       styleId,
       mode,
+      toggle,
       createNewProduct,
       deleteSelectedProduct,
       product: { data: productData },
@@ -126,6 +127,8 @@ class ProductModal extends Component {
       });
     } else if (mode === ACTIONS.DELETE) {
       deleteSelectedProduct({ styleId });
+    } else if (mode === ACTIONS.SELECT) {
+      toggle(null, productData);
     }
   };
 
@@ -228,7 +231,7 @@ class ProductModal extends Component {
           </thead>
           <tbody>
             {Object.keys(specsData).map((spec, index) => (
-              <tr key={`td-spec-${index}`}>
+              <tr key={`tr-spec-${index}`}>
                 <td>{spec}</td>
                 {tableColumns.map((sizeColumn) => (
                   <td key={`td-${sizeColumn}-${index}`}>
@@ -275,6 +278,7 @@ class ProductModal extends Component {
           onEnter={this.onOpened}
           onExit={this.onClosed}
           wrapClassName="modal-right"
+          scrollable
           size="lg"
         >
           {fetching ? (
@@ -308,14 +312,16 @@ class ProductModal extends Component {
                   </Colxx>
                 </Row>
               </ModalBody>
-              {(mode === ACTIONS.CREATE || mode === ACTIONS.DELETE) && (
+              {[ACTIONS.CREATE, ACTIONS.DELETE, ACTIONS.SELECT].includes(
+                mode,
+              ) && (
                 <ModalFooter>
                   <Button color="secondary" size="lg" outline onClick={toggle}>
                     Cancel
                   </Button>
                   <Button
                     type="button"
-                    color={mode === ACTIONS.CREATE ? 'primary' : 'danger'}
+                    color={mode === ACTIONS.DELETE ? 'danger' : 'primary'}
                     size="lg"
                     className={`btn-shadow btn-multiple-state ${
                       loading ? 'show-spinner' : ''
@@ -328,7 +334,9 @@ class ProductModal extends Component {
                       <span className="bounce3" />
                     </span>
                     <span className="label">
-                      {mode === ACTIONS.CREATE ? 'Add' : 'Delete'}
+                      {mode === ACTIONS.CREATE ? 'Add' : ''}
+                      {mode === ACTIONS.DELETE ? 'Delete' : ''}
+                      {mode === ACTIONS.SELECT ? 'Select' : ''}
                     </span>
                   </Button>
                 </ModalFooter>

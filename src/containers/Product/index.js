@@ -10,13 +10,13 @@ import {
   createProduct,
   deleteProduct,
 } from './actions';
-import { makeselectProduct } from './selectors';
+import { makeSelectProduct } from './selectors';
 import saga from './saga';
 import ProductModal from './ProductModal';
 
 const mapStateToProps = createStructuredSelector({
   currentUser: makeSelectCurrentUser(),
-  product: makeselectProduct(),
+  product: makeSelectProduct(),
 });
 const mapDispatchToProps = (dispatch) => ({
   initProduct: () => dispatch(initProduct()),

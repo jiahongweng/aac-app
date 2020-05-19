@@ -5,6 +5,7 @@ import userRoutes from './UserRoutes';
 import organizationRoutes from './OrganizationRoutes';
 import productRoutes from './ProductRoute';
 import ssaRoutes from './SSARoute';
+import orderRoutes from './OrderRoutes';
 
 const router = express.Router();
 
@@ -49,5 +50,14 @@ router.use(
  * S&S Activewear
  */
 router.use('/ssa', passport.authenticate('jwt', { session: false }), ssaRoutes);
+
+/**
+ * Orders
+ */
+router.use(
+  '/orders',
+  passport.authenticate('jwt', { session: false }),
+  orderRoutes,
+);
 
 export default router;

@@ -46,6 +46,9 @@ const AddProducts = React.lazy(() =>
     /* webpackChunkName: "app-addProducts" */ 'containers/ProductList/AddProducts'
   ),
 );
+const OrderList = React.lazy(() =>
+  import(/* webpackChunkName: "app-orderlist" */ 'containers/OrderList'),
+);
 const Account = React.lazy(() =>
   import(
     /* webpackChunkName: "settings-account" */ 'containers/Settings/Account'
@@ -133,6 +136,7 @@ const routes = (isAuthenticated) => (
             '/organizations',
             '/products',
             '/products/add-product',
+            '/orders',
             '/settings',
             '/settings/account',
             '/settings/organization',
@@ -173,6 +177,13 @@ const routes = (isAuthenticated) => (
                   exact
                   path="/products/add-product"
                   component={AddProducts}
+                  shouldLoad={isAuthenticated}
+                  unloadRedirectTo="/login"
+                />
+                <ControlledRoute
+                  exact
+                  path="/orders"
+                  component={OrderList}
                   shouldLoad={isAuthenticated}
                   unloadRedirectTo="/login"
                 />

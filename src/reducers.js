@@ -9,6 +9,8 @@ import organizationListReducer from 'containers/OrganizationList/reducer';
 import organizationReducer from 'containers/Organization/reducer';
 import productListReducer from 'containers/ProductList/reducer';
 import productReducer from 'containers/Product/reducer';
+import orderListReducer from 'containers/OrderList/reducer';
+import orderReducer from 'containers/Order/reducer';
 import menuReducer from 'components/navs/reducer';
 
 export default function createReducer(injectedReducers = {}) {
@@ -20,6 +22,8 @@ export default function createReducer(injectedReducers = {}) {
     organization: organizationReducer,
     productList: productListReducer,
     product: productReducer,
+    orderList: orderListReducer,
+    order: orderReducer,
     menu: menuReducer,
     router: connectRouter(history),
     ...injectedReducers,

@@ -50,6 +50,7 @@ export const BREADCRUMB_ITEMS = {
   'breadcrumb.organization': 'Organization',
   'breadcrumb.products': 'Products',
   'breadcrumb.add-product': 'Add products',
+  'breadcrumb.orders': 'Orders',
 };
 
 export const MENU_SET_CLASSNAMES = 'Menu/SET_CLASSNAMES';

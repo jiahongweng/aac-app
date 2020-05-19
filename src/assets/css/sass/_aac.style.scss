@@ -3009,6 +3009,10 @@ main {
 
 .product-card {
   cursor: pointer;
+
+  &.active {
+    border: 2px solid #{$theme-color-1};
+  }
   
   .card-img-container {
     position: relative;
@@ -5891,6 +5895,10 @@ input:-webkit-autofill {
     margin-top: 0;
     margin-bottom: 0;
     height: 100%;
+
+    &.modal-dialog-scrollable {
+      max-height: 100vh !important;
+    }
   }
 
   .modal-content {
@@ -5907,6 +5915,14 @@ input:-webkit-autofill {
 
   .modal.show .modal-dialog {
     transform: translate(0, 0) !important;
+  }
+}
+
+.modal-full {
+  max-width: calc(100% - #{$main-margin});
+
+  @include respond-below(lg) {
+    max-width: 100%;
   }
 }
 
@@ -6813,6 +6829,10 @@ input:-webkit-autofill {
 .table th,
 .table td {
   border-color: $separator-color-light !important;
+
+  > input.form-control {
+    min-width: 80px;
+  }
 }
 
 .table .thead-light th {
@@ -6955,7 +6975,7 @@ input:-webkit-autofill {
   margin-top: -2rem;
 }
 
-.wizard ul.nav {
+.wizard ul.nav-wizard {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -6977,7 +6997,7 @@ input:-webkit-autofill {
   }
 }
 
-.wizard-default ul.nav {
+.wizard-default ul.nav-wizard {
   li {
     position: relative;
     padding: 0.5rem 1rem;
@@ -7087,7 +7107,7 @@ input:-webkit-autofill {
 }
 
 @include respond-below(sm) {
-  .wizard-default ul.nav li {
+  .wizard-default ul.nav-wizard li {
     small,
     span {
       display: none;

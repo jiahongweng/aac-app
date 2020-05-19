@@ -44,4 +44,6 @@ export const ERROR_MESSAGES = {
     `Cannot find product with the id: ${ProductId}`,
   PRODUCT_NOT_FOUND_WITH_Style_ID: (StyleId) =>
     `Cannot find product with the style id: ${StyleId}`,
+  ORDER_NOT_FOUND_WITH_ID: (orderId) =>
+    `Cannot find the order with the id: ${orderId}`,
 };
