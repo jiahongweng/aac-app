@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import { Row, Button } from 'reactstrap';
+import { Row, Button, Alert } from 'reactstrap';
 import ProductModal from 'containers/Product';
 import CreateOrderModal from 'containers/Order/CreateOrderModal';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
 import { ListPagination } from 'components/pagination';
-import { ACTIONS } from 'utils/constants';
+import { ACTIONS, ROLES } from 'utils/constants';
 import { OrderCard } from 'components/cards';
+import { Link } from 'react-router-dom';
 import { DEFAULT_PAGE_SIZE } from './constants';
 
 class OrderList extends Component {
@@ -19,7 +19,6 @@ class OrderList extends Component {
     this.state = {
       mode: ACTIONS.NONE,
       modalOpen: false,
-      // needRefresh: false,
       orderId: null,
       page: 0,
       pageSize: DEFAULT_PAGE_SIZE,
@@ -71,6 +70,9 @@ class OrderList extends Component {
 
   render() {
     const {
+      currentUser: {
+        data: { role, organization },
+      },
       orders: { loading, error, data = [], page, total, limit },
       match,
     } = this.props;
@@ -86,57 +88,71 @@ class OrderList extends Component {
           <Colxx xxs="auto">
             <Breadcrumb heading="orders" match={match} />
           </Colxx>
-          <Colxx>
-            <div className="float-right mb-2">
-              <Button
-                color="primary"
-                size="lg"
-                className="top-right-button text-uppercase"
-                onClick={(e) => this.openModal(e, ACTIONS.CREATE)}
-              >
-                Add New
-              </Button>
-            </div>
-          </Colxx>
+          {role === ROLES.CLIENT && organization && (
+            <Colxx>
+              <div className="float-right mb-2">
+                <Button
+                  color="primary"
+                  size="lg"
+                  className="top-right-button text-uppercase"
+                  onClick={(e) => this.openModal(e, ACTIONS.CREATE)}
+                >
+                  Add New
+                </Button>
+              </div>
+            </Colxx>
+          )}
           <Colxx xxs="12">
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        {loading ? (
-          <div className="loading" />
-        ) : (
-          <Row>
-            {data.map((order) => (
-              <OrderCard
-                key={order.orderId}
-                order={order}
-                onClickItem={(e) =>
-                  this.openModal(e, ACTIONS.EDIT, order.orderId)
-                }
-              />
-            ))}
-            <ListPagination
-              currentPage={page + 1}
-              totalPage={Math.ceil(total / limit)}
-              onChangePage={(i) => this.onChangePage(i)}
-            />
-            {modalOpen && mode === ACTIONS.CREATE && (
-              <CreateOrderModal
-                mode={mode}
-                isOpen={modalOpen}
-                toggle={this.toggleModal}
-              />
-            )}
-            {modalOpen && mode === ACTIONS.EDIT && (
-              <ProductModal
-                orderId={orderId}
-                mode={ACTIONS.DELETE}
-                isOpen={modalOpen}
-                toggle={this.toggleModal}
-              />
-            )}
-          </Row>
-        )}
+        {(() => {
+          if (loading) {
+            return <div className="loading" />;
+          }
+          if (organization) {
+            return (
+              <Row>
+                {data.map((order) => (
+                  <OrderCard
+                    key={order.orderId}
+                    order={order}
+                    onClickItem={(e) =>
+                      this.openModal(e, ACTIONS.EDIT, order.orderId)
+                    }
+                  />
+                ))}
+                <ListPagination
+                  currentPage={page + 1}
+                  totalPage={Math.ceil(total / limit)}
+                  onChangePage={(i) => this.onChangePage(i)}
+                />
+                {modalOpen && mode === ACTIONS.CREATE && (
+                  <CreateOrderModal
+                    mode={mode}
+                    isOpen={modalOpen}
+                    toggle={this.toggleModal}
+                  />
+                )}
+                {modalOpen && mode === ACTIONS.EDIT && (
+                  <ProductModal
+                    orderId={orderId}
+                    mode={ACTIONS.DELETE}
+                    isOpen={modalOpen}
+                    toggle={this.toggleModal}
+                  />
+                )}
+              </Row>
+            );
+          }
+          return (
+            <Alert color="danger">
+              You have no permission to create an order untilyou add your
+              organization information. Please add your{' '}
+              <Link to="/settings/organization">organization</Link> now.
+            </Alert>
+          );
+        })()}
       </>
     );
   }
@@ -146,7 +162,6 @@ OrderList.propTypes = {
   currentUser: PropTypes.object.isRequired,
   orders: PropTypes.object.isRequired,
   fetchOrderList: PropTypes.func.isRequired,
-  deleteSelectedOrder: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
 };
 

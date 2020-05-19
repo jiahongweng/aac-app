@@ -67,19 +67,10 @@ export function fetchOrderFailed(error) {
  *
  * @return {object} An action object with a type of CREATE_ORDER
  */
-export function createOrder({
-  userId,
-  organizationId,
-  styleId,
-  dueDate,
-  note,
-  products,
-}) {
+export function createOrder({ styleId, dueDate, note, products }) {
   return {
     type: CREATE_ORDER,
     payload: {
-      userId,
-      organizationId,
       styleId,
       dueDate,
       note,

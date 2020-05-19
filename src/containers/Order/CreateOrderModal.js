@@ -653,18 +653,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   fetchProductList: ({ order, orderBy, page, limit }) =>
     dispatch(fetchProducts({ order, orderBy, page, limit })),
-  createNewOrder: ({
-    userId,
-    organizationId,
-    styleId,
-    dueDate,
-    note,
-    products,
-  }) =>
+  createNewOrder: ({ styleId, dueDate, note, products }) =>
     dispatch(
       createOrder({
-        userId,
-        organizationId,
         styleId,
         dueDate,
         note,

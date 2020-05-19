@@ -1,16 +1,13 @@
 import { Router } from 'express';
 import ProductController from '../../controllers/ProductController';
-import {
-  checkRole,
-  checkSelfOrAdmin,
-} from '../../middlewares/permission.middleware';
+import { checkRole } from '../../middlewares/permission.middleware';
 import { ROLES } from '../../utils/constants';
 
 const router = Router();
 
 router
   .route('/')
-  .get(checkSelfOrAdmin, ProductController.getAllProducts)
+  .get(ProductController.getAllProducts)
   .post(checkRole([ROLES.ADMIN]), ProductController.addProduct);
 
 router

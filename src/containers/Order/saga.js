@@ -32,20 +32,11 @@ export function* fetchOrderWatcher() {
  * CREATE_ORDER saga
  */
 export function* createOrder(action) {
-  const {
-    userId,
-    organizationId,
-    styleId,
-    dueDate,
-    note,
-    products,
-  } = action.payload;
+  const { styleId, dueDate, note, products } = action.payload;
   const options = makeJsonRequestOptions({
     method: 'POST',
     requestUrlPath: 'orders',
     data: {
-      userId,
-      organizationId,
       styleId,
       dueDate,
       note,

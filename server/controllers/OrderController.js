@@ -3,7 +3,7 @@ import UserService from '../services/UserService';
 import OrderService from '../services/OrderService';
 import Util from '../utils/Utils';
 import { parseRequestQuery, generateOrderId } from '../utils/misc';
-import { PAGE_PER_NUM, ERROR_MESSAGES } from '../utils/constants';
+import { ROLES, PAGE_PER_NUM, ERROR_MESSAGES } from '../utils/constants';
 
 const util = new Util();
 
@@ -12,10 +12,12 @@ class OrderController {
     try {
       const { page = 0, limit = PAGE_PER_NUM } = parseRequestQuery(req.query);
       const { order, orderBy } = req.query;
+      const { id: userId, role } = req.user;
       const {
         count: totalCount,
         rows: allOrders,
       } = await OrderService.getAllOrders({
+        userId: role === ROLES.CLIENT ? userId : null,
         order,
         orderBy,
         page,
@@ -36,24 +38,12 @@ class OrderController {
   }
 
   static async createOrder(req, res) {
-    if (
-      !req.body.userId ||
-      !req.body.organizationId ||
-      !req.body.styleId ||
-      !req.body.dueDate ||
-      !req.body.products
-    ) {
+    if (!req.body.styleId || !req.body.dueDate || !req.body.products) {
       util.setError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INCOMPLETE_REQUEST);
       return util.send(res);
     }
-    const {
-      userId,
-      organizationId,
-      styleId,
-      dueDate,
-      note,
-      products,
-    } = req.body;
+    const { styleId, dueDate, note, products } = req.body;
+    const { id: userId } = req.user;
 
     try {
       const user = await UserService.getUser(userId);
@@ -65,20 +55,13 @@ class OrderController {
         );
         return util.send(res);
       }
-      if (user.organization.id !== organizationId) {
-        util.setError(
-          httpStatus.BAD_REQUEST,
-          ERROR_MESSAGES.ORGANIZATION_NOT_FOUND_WITH_ID(organizationId),
-        );
-        return util.send(res);
-      }
 
       // generate unique order Id
       const orderId = generateOrderId();
       const createdOrder = await OrderService.createOrder({
         orderId,
         userId,
-        organizationId,
+        organizationId: user.organization.id,
         dueDate,
         note,
         styleId,

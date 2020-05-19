@@ -7,8 +7,8 @@ const router = Router();
 
 router
   .route('/')
-  .get(checkRole([ROLES.ADMIN]), OrderController.getAllOrders)
-  .post(checkRole([ROLES.ADMIN]), OrderController.createOrder);
+  .get(OrderController.getAllOrders)
+  .post(OrderController.createOrder);
 
 router
   .route('/:orderId')

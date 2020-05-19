@@ -2,8 +2,12 @@
 import database from '../src/models';
 
 class OrderService {
-  static async getAllOrders({ order, orderBy, page, limit }) {
+  static async getAllOrders({ userId, order, orderBy, page, limit }) {
     try {
+      let where = {};
+      if (userId) {
+        where = { id: userId };
+      }
       let orders = [['createdAt', 'asc']];
       if ((order === 'asc' || order === 'desc') && orderBy) {
         orders = [[orderBy, order]];
@@ -16,6 +20,7 @@ class OrderService {
           {
             model: database.User,
             as: 'user',
+            where,
             attributes: ['id', 'firstName', 'lastName', 'email', 'phone'],
           },
           {
