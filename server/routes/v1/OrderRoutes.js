@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import OrderController from '../../controllers/OrderController';
-import { checkRole } from '../../middlewares/permission.middleware';
-import { ROLES } from '../../utils/constants';
+import { checkOrderOwnership } from '../../middlewares/permission.middleware';
 
 const router = Router();
 
@@ -12,8 +11,8 @@ router
 
 router
   .route('/:orderId')
-  .get(checkRole([ROLES.ADMIN]), OrderController.getOrder);
-//   .put(checkRole([ROLES.ADMIN]), OrderController.updateOrganization)
-//   .delete(checkRole([ROLES.ADMIN]), OrderController.deleteOrganization);
+  .get(checkOrderOwnership, OrderController.getOrder)
+  .put(checkOrderOwnership, OrderController.updateOrder)
+  .delete(checkOrderOwnership, OrderController.deleteOrder);
 
 export default router;

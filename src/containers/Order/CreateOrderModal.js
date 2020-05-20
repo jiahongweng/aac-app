@@ -19,11 +19,15 @@ import Lightbox from 'react-image-lightbox';
 import moment from 'moment';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { fetchProducts } from 'containers/ProductList/actions';
-import { makeSelectCurrentUser } from 'containers/App/selectors';
 import { makeSelectProducts } from 'containers/ProductList/selectors';
 import ProductModal from 'containers/Product';
 import injectSaga from 'utils/injectSaga';
-import { ORDER_SCHEMA, ACTIONS, SS_ACTIVEWARE } from 'utils/constants';
+import {
+  ORDER_SCHEMA,
+  ACTIONS,
+  SS_ACTIVEWARE,
+  SUCCESS_MESSAGES,
+} from 'utils/constants';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { FormikDatePicker, FormikCustomRadioGroup } from 'components/form';
@@ -31,10 +35,10 @@ import { WizardTopNav, WizardBottomNav } from 'components/wizard';
 import { ListPagination } from 'components/pagination';
 import { ProductCard } from 'components/cards';
 import { ProductColorSwatch } from 'components/swatches';
-import { createOrder } from './actions';
+import { createOrder, initOrder } from './actions';
 import { makeSelectOrder } from './selectors';
-import saga from './saga';
 import { DEFAULT_PAGE_SIZE } from './constants';
+import { createOrderMainSaga as saga } from './saga';
 
 const orderTypeSelectOptions = [
   { value: 'individual', label: 'Individual' },
@@ -89,7 +93,10 @@ class CreateOrderModal extends Component {
       if (error) {
         NotificationManager.error(error.message, 'Error');
       } else if (prevLoading && !loading && submitting) {
-        NotificationManager.success('You have created new order', 'Thank you!');
+        NotificationManager.success(
+          SUCCESS_MESSAGES.CREATE_ORDER_SUCCESS,
+          'Success',
+        );
         toggle(null, true);
       }
     }
@@ -100,7 +107,9 @@ class CreateOrderModal extends Component {
     this.fetchProducts();
   };
 
-  onClosed = () => {};
+  onClosed = () => {
+    this.props.initOrder();
+  };
 
   onClickWizardNext = async (goToNext, steps, step) => {
     // eslint-disable-next-line no-param-reassign
@@ -172,8 +181,6 @@ class CreateOrderModal extends Component {
               } = this.state;
 
               this.props.createNewOrder({
-                userId: 2,
-                organizationId: 11,
                 styleId,
                 type,
                 dueDate,
@@ -569,8 +576,8 @@ class CreateOrderModal extends Component {
       <Modal
         isOpen={isOpen}
         toggle={toggle}
-        onOpened={this.onOpened}
-        onClosed={this.onClosed}
+        onEnter={this.onOpened}
+        onExit={this.onClosed}
         wrapClassName="modal-right"
         scrollable
         size="full"
@@ -633,10 +640,10 @@ class CreateOrderModal extends Component {
 CreateOrderModal.propTypes = {
   isOpen: PropTypes.bool,
   toggle: PropTypes.func,
-  currentUser: PropTypes.object.isRequired,
   currentOrder: PropTypes.object.isRequired,
   products: PropTypes.object.isRequired,
   fetchProductList: PropTypes.func.isRequired,
+  initOrder: PropTypes.func.isRequired,
   createNewOrder: PropTypes.func.isRequired,
 };
 
@@ -646,11 +653,11 @@ CreateOrderModal.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: makeSelectCurrentUser(),
   products: makeSelectProducts(),
   currentOrder: makeSelectOrder(),
 });
 const mapDispatchToProps = (dispatch) => ({
+  initOrder: () => dispatch(initOrder()),
   fetchProductList: ({ order, orderBy, page, limit }) =>
     dispatch(fetchProducts({ order, orderBy, page, limit })),
   createNewOrder: ({ styleId, dueDate, note, products }) =>

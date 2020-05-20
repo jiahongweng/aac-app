@@ -1,13 +1,8 @@
 import { call, fork, takeLatest } from 'redux-saga/effects';
 import { appApiSaga } from 'containers/App/saga';
 import { makeUrlQueryParams, makeJsonRequestOptions } from 'utils/request';
-import { FETCH_ORDERS, DELETE_ORDER } from './constants';
-import {
-  fetchOrdersSucceeded,
-  fetchOrdersFailed,
-  deleteOrderSucceeded,
-  deleteOrderFailed,
-} from './actions';
+import { FETCH_ORDERS } from './constants';
+import { fetchOrdersSucceeded, fetchOrdersFailed } from './actions';
 
 /**
  * FETCH_ORDERS saga
@@ -33,26 +28,8 @@ export function* fetchOrdersWatcher() {
 }
 
 /**
- * DELETE_ORDER saga
- */
-export function* deleteOrder(action) {
-  const { id } = action.payload;
-  const options = makeJsonRequestOptions({
-    method: 'DELETE',
-    requestUrlPath: `orders/${id}`,
-  });
-
-  yield call(appApiSaga, options, [deleteOrderSucceeded], deleteOrderFailed);
-}
-
-export function* deleteOrderWatcher() {
-  yield takeLatest(DELETE_ORDER, deleteOrder);
-}
-
-/**
  * Root saga manages watcher lifecycle
  */
 export default function* orderListMainSaga() {
   yield fork(fetchOrdersWatcher);
-  yield fork(deleteOrderWatcher);
 }

@@ -20,7 +20,7 @@ export const STATUSES = {
   INACTIVE: 0,
 };
 
-export const ORDER_STATUS = [
+export const ORDER_STATUSES = [
   {
     name: 'Created',
     color: 'primary',
@@ -39,12 +39,20 @@ export const ORDER_STATUS = [
   },
 ];
 
+export const ORDER_STATUS = {
+  CREATED: 0,
+  PURCHASE_PHASE: 1,
+  PRE_PRODUCTION: 2,
+  PRODUCTION: 3,
+};
+
 export const ACTIONS = {
   NONE: '',
   CREATE: 'create',
   EDIT: 'edit',
   DELETE: 'delete',
   SELECT: 'select',
+  VIEW: 'view',
 };
 
 const authShape = {
@@ -172,6 +180,9 @@ export const SUCCESS_MESSAGES = {
     'Product has been added to AAC products successfully.',
   DELETE_PRODUCT_SUCCESS:
     'Product has been deleted from AAC products successfully.',
+  CREATE_ORDER_SUCCESS: 'Order has been created successfully.',
+  DELETE_ORDER_SUCCESS: 'Order has been deleted successfully.',
+  UPDATE_ORDER_SUCCESS: 'Order has been updated successfully.',
 };
 
 export const API_BASE = process.env.REACT_APP_API_SERVER_URL;

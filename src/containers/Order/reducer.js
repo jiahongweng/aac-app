@@ -6,6 +6,9 @@ import {
   CREATE_ORDER,
   CREATE_ORDER_SUCCESS,
   CREATE_ORDER_ERROR,
+  UPDATE_ORDER,
+  UPDATE_ORDER_SUCCESS,
+  UPDATE_ORDER_ERROR,
   DELETE_ORDER,
   DELETE_ORDER_SUCCESS,
   DELETE_ORDER_ERROR,
@@ -34,6 +37,7 @@ function orderReducer(state = initialState, action) {
         },
       };
     case CREATE_ORDER:
+    case UPDATE_ORDER:
     case DELETE_ORDER:
       return {
         order: {
@@ -44,6 +48,7 @@ function orderReducer(state = initialState, action) {
       };
     case FETCH_ORDER_SUCCESS:
     case CREATE_ORDER_SUCCESS:
+    case UPDATE_ORDER_SUCCESS:
       return {
         order: {
           loading: false,
@@ -67,6 +72,7 @@ function orderReducer(state = initialState, action) {
         },
       };
     case CREATE_ORDER_ERROR:
+    case UPDATE_ORDER_ERROR:
     case DELETE_ORDER_ERROR:
       return {
         order: {

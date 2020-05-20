@@ -59,19 +59,20 @@ class OrderService {
     }
   }
 
-  static async updateOrder(id, order) {
+  static async updateOrder(orderId, order) {
     try {
       const orderToUpdate = await database.Order.findOne({
-        where: { id: Number(id) },
+        where: { orderId },
       });
 
       if (orderToUpdate) {
         await database.Order.update(order, {
-          where: { id: Number(id) },
+          where: { orderId },
         });
 
         return order;
       }
+
       return null;
     } catch (error) {
       throw error;
@@ -118,15 +119,15 @@ class OrderService {
     }
   }
 
-  static async deleteOrder(id) {
+  static async deleteOrder(orderId) {
     try {
       const orderToDelete = await database.Order.findOne({
-        where: { id: Number(id) },
+        where: { orderId },
       });
 
       if (orderToDelete) {
         const order = await database.Order.destroy({
-          where: { id: Number(id) },
+          where: { orderId },
         });
         return order;
       }

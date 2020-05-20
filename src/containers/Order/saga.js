@@ -1,27 +1,46 @@
-import { call, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, takeLatest } from 'redux-saga/effects';
 import { appApiSaga } from 'containers/App/saga';
 import { makeJsonRequestOptions } from 'utils/request';
 import { fetchProductsWatcher } from 'containers/ProductList/saga';
-import { fetchProductWatcher } from 'containers/Product/saga';
-import { FETCH_ORDER, CREATE_ORDER } from './constants';
+import {
+  fetchProductSucceeded,
+  fetchProductFailed,
+} from 'containers/Product/actions';
+import {
+  FETCH_ORDER,
+  CREATE_ORDER,
+  UPDATE_ORDER,
+  DELETE_ORDER,
+} from './constants';
 import {
   fetchOrderSucceeded,
   fetchOrderFailed,
   createOrderSucceeded,
   createOrderFailed,
+  updateOrderSucceeded,
+  updateOrderFailed,
+  deleteOrderSucceeded,
+  deleteOrderFailed,
 } from './actions';
 
 /**
  * FETCH_ORDER saga
  */
 export function* fetchOrder(action) {
-  const { orderId } = action.payload;
-  const options = makeJsonRequestOptions({
+  const { orderId, styleId } = action.payload;
+  const orderOptions = makeJsonRequestOptions({
     method: 'GET',
     requestUrlPath: `orders/${orderId}`,
   });
+  const styleOptions = makeJsonRequestOptions({
+    method: 'GET',
+    requestUrlPath: `ssa/styles/${styleId}/products`,
+  });
 
-  yield call(appApiSaga, options, [fetchOrderSucceeded], fetchOrderFailed);
+  yield all([
+    call(appApiSaga, orderOptions, [fetchOrderSucceeded], fetchOrderFailed),
+    call(appApiSaga, styleOptions, [fetchProductSucceeded], fetchProductFailed),
+  ]);
 }
 
 export function* fetchOrderWatcher() {
@@ -52,11 +71,51 @@ export function* createOrderWatcher() {
 }
 
 /**
+ * DELETE_ORDER saga
+ */
+export function* deleteOrder(action) {
+  const { orderId } = action.payload;
+  const options = makeJsonRequestOptions({
+    method: 'DELETE',
+    requestUrlPath: `orders/${orderId}`,
+  });
+
+  yield call(appApiSaga, options, [deleteOrderSucceeded], deleteOrderFailed);
+}
+
+export function* deleteOrderWatcher() {
+  yield takeLatest(DELETE_ORDER, deleteOrder);
+}
+
+/**
+ * UPDATE_ORDER saga
+ */
+export function* updateOrder(action) {
+  const { orderId, ...rest } = action.payload;
+  const data = { ...rest };
+  const options = makeJsonRequestOptions({
+    method: 'PUT',
+    requestUrlPath: `orders/${orderId}`,
+    data,
+  });
+
+  yield call(appApiSaga, options, [updateOrderSucceeded], updateOrderFailed);
+}
+
+export function* updateOrderWatcher() {
+  yield takeLatest(UPDATE_ORDER, updateOrder);
+}
+
+/**
  * Root saga manages watcher lifecycle
  */
-export default function* orderMainSaga() {
-  yield fork(fetchOrderWatcher);
+export function* createOrderMainSaga() {
   yield fork(fetchProductsWatcher);
-  // yield fork(fetchProductWatcher);
   yield fork(createOrderWatcher);
+}
+
+export function* orderMainSaga() {
+  yield fork(fetchOrderWatcher);
+  yield fork(updateOrderWatcher);
+  yield fork(deleteOrderWatcher);
 }

@@ -10,6 +10,7 @@ import {
   Row,
   Table,
 } from 'reactstrap';
+import confirm from 'reactstrap-confirm';
 import ReactHtmlParser from 'react-html-parser';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -66,7 +67,7 @@ class ProductModal extends Component {
             );
             toggle(null);
           } else {
-            NotificationManager.info(
+            NotificationManager.warning(
               SUCCESS_MESSAGES.DELETE_PRODUCT_SUCCESS,
               'Note',
             );
@@ -93,11 +94,13 @@ class ProductModal extends Component {
   };
 
   onClosed = () => {
-    this.props.initProduct();
+    if (this.props.initialize) {
+      this.props.initProduct();
+    }
     this.setState({ selectedColor: null });
   };
 
-  onSubmit = () => {
+  onSubmit = async () => {
     const {
       styleId,
       mode,
@@ -126,7 +129,14 @@ class ProductModal extends Component {
         description,
       });
     } else if (mode === ACTIONS.DELETE) {
-      deleteSelectedProduct({ styleId });
+      const confirmResult = await confirm({
+        title: <span className="text-danger">Delete Confirmation</span>,
+        message: 'Would you like to delete this product from the list?',
+        confirmText: 'Confirm',
+      });
+      if (confirmResult) {
+        deleteSelectedProduct({ styleId });
+      }
     } else if (mode === ACTIONS.SELECT) {
       toggle(null, productData);
     }
@@ -359,11 +369,13 @@ ProductModal.propTypes = {
   mode: PropTypes.string.isRequired,
   isOpen: PropTypes.bool,
   toggle: PropTypes.func,
+  initialize: PropTypes.bool,
 };
 
 ProductModal.defaultProps = {
   styleId: null,
   isOpen: false,
+  initialize: true,
   toggle: () => {},
 };
 

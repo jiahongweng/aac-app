@@ -32,12 +32,17 @@ module.exports = {
         },
         onDelete: 'CASCADE',
       },
+      type: {
+        type: Sequelize.ENUM,
+        values: ['individual', 'bulk'],
+        defaultValue: 'individual',
+      },
       dueDate: {
         type: Sequelize.DATE,
         allowNull: false,
       },
       note: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       styleId: {
         type: Sequelize.INTEGER,
@@ -49,7 +54,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       designs: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
       },
       products: {
         type: Sequelize.JSONB,
@@ -62,19 +67,20 @@ module.exports = {
           min: 0,
           max: 3,
         },
-        comment: '0: Created, 1: Purcahse Phase, 2: Pre-Production, 3: Production',
+        comment:
+          '0: Created, 1: Purcahse Phase, 2: Pre-Production, 3: Production',
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Orders');
-  }
+  },
 };

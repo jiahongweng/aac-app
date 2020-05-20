@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Button, Alert } from 'reactstrap';
-import ProductModal from 'containers/Product';
 import CreateOrderModal from 'containers/Order/CreateOrderModal';
+import OrderModal from 'containers/Order/OrderModal';
 import { NotificationManager } from 'components/common/notifications';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Breadcrumb } from 'components/navs';
@@ -20,6 +20,7 @@ class OrderList extends Component {
       mode: ACTIONS.NONE,
       modalOpen: false,
       orderId: null,
+      styleId: null,
       page: 0,
       pageSize: DEFAULT_PAGE_SIZE,
     };
@@ -46,10 +47,10 @@ class OrderList extends Component {
     });
   };
 
-  openModal = (e, mode, orderId = null) => {
+  openModal = (e, mode, orderId = null, styleId = null) => {
     e.persist();
 
-    this.setState({ mode, orderId }, () => {
+    this.setState({ mode, orderId, styleId }, () => {
       this.toggleModal(e);
     });
   };
@@ -76,7 +77,7 @@ class OrderList extends Component {
       orders: { loading, error, data = [], page, total, limit },
       match,
     } = this.props;
-    const { mode, modalOpen, orderId } = this.state;
+    const { mode, modalOpen, orderId, styleId } = this.state;
 
     if (error) {
       NotificationManager.error(error.message, 'Error');
@@ -110,7 +111,7 @@ class OrderList extends Component {
           if (loading) {
             return <div className="loading" />;
           }
-          if (organization) {
+          if (organization || role === ROLES.ADMIN) {
             return (
               <Row>
                 {data.map((order) => (
@@ -118,7 +119,12 @@ class OrderList extends Component {
                     key={order.orderId}
                     order={order}
                     onClickItem={(e) =>
-                      this.openModal(e, ACTIONS.EDIT, order.orderId)
+                      this.openModal(
+                        e,
+                        ACTIONS.VIEW,
+                        order.orderId,
+                        order.styleId,
+                      )
                     }
                   />
                 ))}
@@ -134,9 +140,10 @@ class OrderList extends Component {
                     toggle={this.toggleModal}
                   />
                 )}
-                {modalOpen && mode === ACTIONS.EDIT && (
-                  <ProductModal
+                {modalOpen && mode === ACTIONS.VIEW && (
+                  <OrderModal
                     orderId={orderId}
+                    styleId={styleId}
                     mode={ACTIONS.DELETE}
                     isOpen={modalOpen}
                     toggle={this.toggleModal}

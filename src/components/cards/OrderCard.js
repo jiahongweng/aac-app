@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { Card, Badge } from 'reactstrap';
 import moment from 'moment';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { SS_ACTIVEWARE, ORDER_STATUS } from 'utils/constants';
+import { SS_ACTIVEWARE, ORDER_STATUSES } from 'utils/constants';
 
 const OrderCard = ({ order, isSelect, onClickItem, scrollPosition }) => (
   <Colxx xxs="12" className="mb-3" key={order.orderId}>
@@ -49,11 +49,11 @@ const OrderCard = ({ order, isSelect, onClickItem, scrollPosition }) => (
 
           <div className="w-15 w-sm-100">
             <Badge
-              color={ORDER_STATUS[order.status].color}
+              color={ORDER_STATUSES[order.status].color}
               className="px-4"
               pill
             >
-              {ORDER_STATUS[order.status].name}
+              {ORDER_STATUSES[order.status].name}
             </Badge>
           </div>
         </div>

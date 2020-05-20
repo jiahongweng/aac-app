@@ -6,6 +6,9 @@ import {
   CREATE_ORDER,
   CREATE_ORDER_SUCCESS,
   CREATE_ORDER_ERROR,
+  UPDATE_ORDER,
+  UPDATE_ORDER_SUCCESS,
+  UPDATE_ORDER_ERROR,
   DELETE_ORDER,
   DELETE_ORDER_SUCCESS,
   DELETE_ORDER_ERROR,
@@ -27,10 +30,10 @@ export function initOrder() {
  *
  * @return {object} An action object with a type of FETCH_ORDER
  */
-export function fetchOrder({ orderId }) {
+export function fetchOrder({ orderId, styleId }) {
   return {
     type: FETCH_ORDER,
-    payload: { orderId },
+    payload: { orderId, styleId },
   };
 }
 
@@ -103,6 +106,46 @@ export function createOrderSucceeded({ data }) {
 export function createOrderFailed(error) {
   return {
     type: CREATE_ORDER_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Update order, this action starts the request saga
+ *
+ * @return {object} An action object with a type of UPDATE_ORDER
+ */
+export function updateOrder(payload) {
+  return {
+    type: UPDATE_ORDER,
+    payload,
+  };
+}
+
+/**
+ * Dispatched when the order is updated by the request saga
+ *
+ * @param  {object} order updated order info
+ *
+ * @return {object} An action object with a type of UPDATE_ORDER_SUCCESS passing the order
+ */
+export function updateOrderSucceeded({ data }) {
+  return {
+    type: UPDATE_ORDER_SUCCESS,
+    payload: { data },
+  };
+}
+
+/**
+ * Dispatched when updating order fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of UPDATE_ORDER_ERROR passing the error
+ */
+export function updateOrderFailed(error) {
+  return {
+    type: UPDATE_ORDER_ERROR,
     payload: { error },
   };
 }

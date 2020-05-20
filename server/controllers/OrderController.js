@@ -72,6 +72,7 @@ class OrderController {
     } catch (error) {
       util.setError(httpStatus.NOT_FOUND, error.message);
     }
+
     return util.send(res);
   }
 
@@ -81,78 +82,40 @@ class OrderController {
     try {
       const order = await OrderService.getOrder(orderId);
 
-      if (!order) {
-        util.setError(
-          httpStatus.NOT_FOUND,
-          ERROR_MESSAGES.ORDER_NOT_FOUND_WITH_ID(orderId),
-        );
-      } else {
-        util.setSuccess(httpStatus.OK, order);
-      }
-      return util.send(res);
+      util.setSuccess(httpStatus.OK, order);
     } catch (error) {
       util.setError(httpStatus.NOT_FOUND, error.message);
-      return util.send(res);
     }
-  }
 
-  static async updateOrganization(req, res) {
-    const alteredOrganization = req.body;
-    const { id } = req.params;
-    if (!Number(id)) {
-      util.setError(
-        httpStatus.NOT_ACCEPTABLE,
-        ERROR_MESSAGES.INVALID_NUMERIC_VALUE,
-      );
-      return util.send(res);
-    }
-    try {
-      let updatedOrganization = await OrderService.updateOrganization(
-        id,
-        alteredOrganization,
-      );
-      if (!updatedOrganization) {
-        util.setError(
-          httpStatus.NOT_FOUND,
-          ERROR_MESSAGES.ORGANIZATION_NOT_FOUND_WITH_ID(id),
-        );
-      } else {
-        updatedOrganization = await OrderService.getOrganization(id);
-        util.setSuccess(httpStatus.OK, updatedOrganization);
-      }
-    } catch (error) {
-      util.setError(httpStatus.NOT_FOUND, error.message);
-    }
     return util.send(res);
   }
 
-  static async deleteOrganization(req, res) {
-    const { id } = req.params;
-
-    if (!Number(id)) {
-      util.setError(
-        httpStatus.NOT_ACCEPTABLE,
-        ERROR_MESSAGES.INVALID_NUMERIC_VALUE,
-      );
-      return util.send(res);
-    }
+  static async updateOrder(req, res) {
+    const alteredOrder = req.body;
+    const { orderId } = req.params;
 
     try {
-      const organizationToDelete = await OrderService.deleteOrganization(id);
+      await OrderService.updateOrder(orderId, alteredOrder);
+      const updatedOrder = await OrderService.getOrder(orderId);
+      util.setSuccess(httpStatus.OK, updatedOrder);
+    } catch (error) {
+      util.setError(httpStatus.NOT_FOUND, error.message);
+    }
 
-      if (organizationToDelete) {
-        util.setSuccess(httpStatus.OK, { deletedId: Number(id) });
-      } else {
-        util.setError(
-          httpStatus.NOT_FOUND,
-          ERROR_MESSAGES.ORGANIZATION_NOT_FOUND_WITH_ID(id),
-        );
-      }
-      return util.send(res);
+    return util.send(res);
+  }
+
+  static async deleteOrder(req, res) {
+    const { orderId } = req.params;
+
+    try {
+      await OrderService.deleteOrder(orderId);
+      util.setSuccess(httpStatus.OK, { deletedId: orderId });
     } catch (error) {
       util.setError(httpStatus.BAD_REQUEST, error.message);
-      return util.send(res);
     }
+
+    return util.send(res);
   }
 }
 
