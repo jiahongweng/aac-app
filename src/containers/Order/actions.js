@@ -12,6 +12,9 @@ import {
   DELETE_ORDER,
   DELETE_ORDER_SUCCESS,
   DELETE_ORDER_ERROR,
+  DELETE_ORDER_DESIGN,
+  DELETE_ORDER_DESIGN_SUCCESS,
+  DELETE_ORDER_DESIGN_ERROR,
 } from './constants';
 
 /**
@@ -188,6 +191,49 @@ export function deleteOrderSucceeded({ data }) {
 export function deleteOrderFailed(error) {
   return {
     type: DELETE_ORDER_ERROR,
+    payload: { error },
+  };
+}
+
+/**
+ * Delete order design file, this action starts the request saga
+ *
+ * @return {object} An action object with a type of DELETE_ORDER_DESIGN
+ */
+export function deleteOrderDesign({ orderId, img }) {
+  return {
+    type: DELETE_ORDER_DESIGN,
+    payload: {
+      orderId,
+      img,
+    },
+  };
+}
+
+/**
+ * Dispatched when the order design is deleted by the request saga
+ *
+ * @param  {object} order deleted order info
+ *
+ * @return {object} An action object with a type of DELETE_ORDER_DESIGN_SUCCESS passing the order
+ */
+export function deleteOrderDesignSucceeded({ data }) {
+  return {
+    type: DELETE_ORDER_DESIGN_SUCCESS,
+    payload: { data },
+  };
+}
+
+/**
+ * Dispatched when deleting order fails
+ *
+ * @param  {object} error The error
+ *
+ * @return {object} An action object with a type of DELETE_ORDER_DESIGN_ERROR passing the error
+ */
+export function deleteOrderDesignFailed(error) {
+  return {
+    type: DELETE_ORDER_DESIGN_ERROR,
     payload: { error },
   };
 }

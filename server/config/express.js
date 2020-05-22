@@ -1,4 +1,5 @@
 import express from 'express';
+import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import compress from 'compression';
@@ -17,6 +18,9 @@ require('./cron');
  * @public
  */
 const app = express();
+
+// file upload middewear
+app.use(fileUpload());
 
 // request logging. dev: console | production: file
 app.use(morgan(process.env.NODE_ENV ? 'combined' : 'dev'));

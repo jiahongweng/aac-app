@@ -10,6 +10,10 @@ export const SS_ACTIVEWARE = {
   CDN_BASE: 'https://cdn.ssactivewear.com',
 };
 
+export const AWS = {
+  CDN_BASE: 'https://aac-image.s3.amazonaws.com',
+};
+
 export const ROLES = {
   ADMIN: 2,
   CLIENT: 1,

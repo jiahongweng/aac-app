@@ -19,6 +19,7 @@ import {
   TabContent,
   TabPane,
   Badge,
+  Alert,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import Lightbox from 'react-image-lightbox';
@@ -34,6 +35,7 @@ import injectSaga from 'utils/injectSaga';
 import {
   ORDER_SCHEMA,
   ACTIONS,
+  AWS,
   SS_ACTIVEWARE,
   ROLES,
   ORDER_STATUS,
@@ -44,7 +46,14 @@ import { NotificationManager } from 'components/common/notifications';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { FormikDatePicker, FormikCustomRadioGroup } from 'components/form';
 import { ProductColorSwatch } from 'components/swatches';
-import { initOrder, fetchOrder, updateOrder, deleteOrder } from './actions';
+import { OrderDesignUploader } from 'components/uploader';
+import {
+  initOrder,
+  fetchOrder,
+  updateOrder,
+  deleteOrder,
+  deleteOrderDesign,
+} from './actions';
 import { makeSelectOrder } from './selectors';
 import { ORDER_ACTIONS } from './constants';
 import { orderMainSaga as saga } from './saga';
@@ -547,10 +556,11 @@ class OrderModal extends Component {
       currentOrderProduct: { data: orderProductData },
     } = this.props;
     const {
+      activeTab,
       lightbox: { isOpen = false, color = null, index = 0 },
     } = this.state;
 
-    if (isOpen && orderProductData && color) {
+    if (activeTab === '2' && isOpen && orderProductData && color) {
       const {
         colorFrontImage = null,
         colorSideImage = null,
@@ -608,6 +618,139 @@ class OrderModal extends Component {
             }
           />
         )
+      );
+    }
+
+    return null;
+  };
+
+  renderReferenceDesigns = () => {
+    const {
+      orderId,
+      fetchSelectedOrder,
+      deleteSelectedOrderDesign,
+      currentUser: {
+        data: { role },
+      },
+      currentOrder: { data: orderData },
+    } = this.props;
+
+    if (orderData) {
+      return (
+        <>
+          {orderData.designs && (
+            <Row className="gallery">
+              {orderData.designs.map((design, index) => (
+                <Colxx md="6" className="mb-5" key={index}>
+                  <div className="position-relative">
+                    {role === ROLES.ADMIN && (
+                      <div className="position-absolute card-top-buttons">
+                        <Button
+                          outline
+                          color="white"
+                          className="icon-button"
+                          onClick={() =>
+                            deleteSelectedOrderDesign({ orderId, img: design })
+                          }
+                        >
+                          <i className="simple-icon-trash" />
+                        </Button>
+                      </div>
+                    )}
+                    <NavLink
+                      to="#"
+                      onClick={() =>
+                        this.setState((prevState) => ({
+                          lightbox: {
+                            ...prevState.lightbox,
+                            isOpen: true,
+                            index,
+                          },
+                        }))
+                      }
+                    >
+                      <img
+                        className="img-fluid border-radius"
+                        src={`${AWS.CDN_BASE}/${orderId}/${design}`}
+                      />
+                    </NavLink>
+                  </div>
+                </Colxx>
+              ))}
+              {(() => {
+                const {
+                  activeTab,
+                  lightbox: { isOpen = false, index = 0 },
+                } = this.state;
+                const lightboxImages = (orderData.designs || []).map(
+                  (design) => `${AWS.CDN_BASE}/${orderId}/${design}`,
+                );
+
+                return (
+                  activeTab === '3' &&
+                  isOpen &&
+                  lightboxImages.length > 0 && (
+                    <Lightbox
+                      mainSrc={lightboxImages[index]}
+                      nextSrc={
+                        lightboxImages[(index + 1) % lightboxImages.length]
+                      }
+                      prevSrc={
+                        lightboxImages[
+                          (index + lightboxImages.length - 1) %
+                            lightboxImages.length
+                        ]
+                      }
+                      onCloseRequest={() =>
+                        this.setState((prevState) => ({
+                          lightbox: { ...prevState.lightbox, isOpen: false },
+                        }))
+                      }
+                      onMovePrevRequest={() =>
+                        this.setState((prevState) => ({
+                          lightbox: {
+                            ...prevState.lightbox,
+                            index:
+                              (index + lightboxImages.length - 1) %
+                              lightboxImages.length,
+                          },
+                        }))
+                      }
+                      onMoveNextRequest={() =>
+                        this.setState((prevState) => ({
+                          lightbox: {
+                            ...prevState.lightbox,
+                            index: (index + 1) % lightboxImages.length,
+                          },
+                        }))
+                      }
+                    />
+                  )
+                );
+              })()}
+            </Row>
+          )}
+          {!(orderData.designs || []).length && (
+            <Alert color="warning">
+              There are no reference designs to show.{' '}
+              {role === ROLES.ADMIN
+                ? 'Please upload the designs.'
+                : 'Administrator will upload them soon .'}
+            </Alert>
+          )}
+          {role === ROLES.ADMIN && (
+            <Row>
+              <Colxx lg={{ size: 6, offset: 3 }}>
+                <OrderDesignUploader
+                  orderId={orderId}
+                  onUploadComplete={() => {
+                    fetchSelectedOrder({ orderId });
+                  }}
+                />
+              </Colxx>
+            </Row>
+          )}
+        </>
       );
     }
 
@@ -734,7 +877,7 @@ class OrderModal extends Component {
                       {this.renderOrderItems()}
                       {this.renderLightBox()}
                     </TabPane>
-                    <TabPane tabId="3"></TabPane>
+                    <TabPane tabId="3">{this.renderReferenceDesigns()}</TabPane>
                   </TabContent>
                 </Colxx>
               </Row>
@@ -807,6 +950,7 @@ OrderModal.propTypes = {
   fetchSelectedOrder: PropTypes.func.isRequired,
   updateSelectedOrder: PropTypes.func.isRequired,
   deleteSelectedOrder: PropTypes.func.isRequired,
+  deleteSelectedOrderDesign: PropTypes.func.isRequired,
 };
 
 OrderModal.defaultProps = {
@@ -830,6 +974,13 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(
       deleteOrder({
         orderId,
+      }),
+    ),
+  deleteSelectedOrderDesign: ({ orderId, img }) =>
+    dispatch(
+      deleteOrderDesign({
+        orderId,
+        img,
       }),
     ),
 });

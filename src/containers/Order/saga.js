@@ -11,6 +11,7 @@ import {
   CREATE_ORDER,
   UPDATE_ORDER,
   DELETE_ORDER,
+  DELETE_ORDER_DESIGN,
 } from './constants';
 import {
   fetchOrderSucceeded,
@@ -21,26 +22,43 @@ import {
   updateOrderFailed,
   deleteOrderSucceeded,
   deleteOrderFailed,
+  deleteOrderDesignSucceeded,
+  deleteOrderDesignFailed,
 } from './actions';
 
 /**
  * FETCH_ORDER saga
  */
 export function* fetchOrder(action) {
-  const { orderId, styleId } = action.payload;
+  const { orderId, styleId = null } = action.payload;
   const orderOptions = makeJsonRequestOptions({
     method: 'GET',
     requestUrlPath: `orders/${orderId}`,
   });
-  const styleOptions = makeJsonRequestOptions({
-    method: 'GET',
-    requestUrlPath: `ssa/styles/${styleId}/products`,
-  });
 
-  yield all([
-    call(appApiSaga, orderOptions, [fetchOrderSucceeded], fetchOrderFailed),
-    call(appApiSaga, styleOptions, [fetchProductSucceeded], fetchProductFailed),
-  ]);
+  if (styleId) {
+    const styleOptions = makeJsonRequestOptions({
+      method: 'GET',
+      requestUrlPath: `ssa/styles/${styleId}/products`,
+    });
+
+    yield all([
+      call(appApiSaga, orderOptions, [fetchOrderSucceeded], fetchOrderFailed),
+      call(
+        appApiSaga,
+        styleOptions,
+        [fetchProductSucceeded],
+        fetchProductFailed,
+      ),
+    ]);
+  } else {
+    yield call(
+      appApiSaga,
+      orderOptions,
+      [fetchOrderSucceeded],
+      fetchOrderFailed,
+    );
+  }
 }
 
 export function* fetchOrderWatcher() {
@@ -71,23 +89,6 @@ export function* createOrderWatcher() {
 }
 
 /**
- * DELETE_ORDER saga
- */
-export function* deleteOrder(action) {
-  const { orderId } = action.payload;
-  const options = makeJsonRequestOptions({
-    method: 'DELETE',
-    requestUrlPath: `orders/${orderId}`,
-  });
-
-  yield call(appApiSaga, options, [deleteOrderSucceeded], deleteOrderFailed);
-}
-
-export function* deleteOrderWatcher() {
-  yield takeLatest(DELETE_ORDER, deleteOrder);
-}
-
-/**
  * UPDATE_ORDER saga
  */
 export function* updateOrder(action) {
@@ -107,6 +108,46 @@ export function* updateOrderWatcher() {
 }
 
 /**
+ * DELETE_ORDER saga
+ */
+export function* deleteOrder(action) {
+  const { orderId } = action.payload;
+  const options = makeJsonRequestOptions({
+    method: 'DELETE',
+    requestUrlPath: `orders/${orderId}`,
+  });
+
+  yield call(appApiSaga, options, [deleteOrderSucceeded], deleteOrderFailed);
+}
+
+export function* deleteOrderWatcher() {
+  yield takeLatest(DELETE_ORDER, deleteOrder);
+}
+
+/**
+ * DELETE_ORDER_DESIGN saga
+ */
+export function* deleteOrderDesign(action) {
+  const { orderId, img } = action.payload;
+  const options = makeJsonRequestOptions({
+    method: 'DELETE',
+    requestUrlPath: `orders/${orderId}/designs`,
+    data: { img },
+  });
+
+  yield call(
+    appApiSaga,
+    options,
+    [deleteOrderDesignSucceeded],
+    deleteOrderDesignFailed,
+  );
+}
+
+export function* deleteOrderDesignWatcher() {
+  yield takeLatest(DELETE_ORDER_DESIGN, deleteOrderDesign);
+}
+
+/**
  * Root saga manages watcher lifecycle
  */
 export function* createOrderMainSaga() {
@@ -118,4 +159,5 @@ export function* orderMainSaga() {
   yield fork(fetchOrderWatcher);
   yield fork(updateOrderWatcher);
   yield fork(deleteOrderWatcher);
+  yield fork(deleteOrderDesignWatcher);
 }

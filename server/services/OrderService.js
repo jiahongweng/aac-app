@@ -109,7 +109,7 @@ class OrderService {
           },
         ],
         attributes: {
-          exclude: ['id', 'createdAt', 'updatedAt'],
+          exclude: ['createdAt', 'updatedAt'],
         },
       });
 

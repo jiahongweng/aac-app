@@ -46,4 +46,5 @@ export const ERROR_MESSAGES = {
     `Cannot find product with the style id: ${StyleId}`,
   ORDER_NOT_FOUND_WITH_ID: (orderId) =>
     `Cannot find the order with the id: ${orderId}`,
+  UPLOAD_NO_FILE: 'No file was uploaded',
 };

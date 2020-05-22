@@ -12,6 +12,9 @@ import {
   DELETE_ORDER,
   DELETE_ORDER_SUCCESS,
   DELETE_ORDER_ERROR,
+  DELETE_ORDER_DESIGN,
+  DELETE_ORDER_DESIGN_SUCCESS,
+  DELETE_ORDER_DESIGN_ERROR,
 } from './constants';
 
 export const initialState = {
@@ -39,6 +42,7 @@ function orderReducer(state = initialState, action) {
     case CREATE_ORDER:
     case UPDATE_ORDER:
     case DELETE_ORDER:
+    case DELETE_ORDER_DESIGN:
       return {
         order: {
           ...state.order,
@@ -49,6 +53,7 @@ function orderReducer(state = initialState, action) {
     case FETCH_ORDER_SUCCESS:
     case CREATE_ORDER_SUCCESS:
     case UPDATE_ORDER_SUCCESS:
+    case DELETE_ORDER_DESIGN_SUCCESS:
       return {
         order: {
           loading: false,
@@ -74,6 +79,7 @@ function orderReducer(state = initialState, action) {
     case CREATE_ORDER_ERROR:
     case UPDATE_ORDER_ERROR:
     case DELETE_ORDER_ERROR:
+    case DELETE_ORDER_DESIGN_ERROR:
       return {
         order: {
           ...state.order,
