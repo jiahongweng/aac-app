@@ -11,3 +11,4 @@ build
 
 server/config/db.json
 .env
+*.pem
