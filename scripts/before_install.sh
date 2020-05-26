@@ -18,3 +18,5 @@ else
     mkdir -p /var/www/html/aac-app
 fi
 
+chown ubuntu:ubuntu -R /var/www/html/aac-app
+
