@@ -1,0 +1,31 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/html/aac-app
+    overwrite: true
+permissions:
+  - object: /var/www/html/aac-app/scripts
+    pattern: "*.sh"
+    owner: root
+    group: root
+    mode: 755
+    type:
+      - file
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 180
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 180
+  ApplicationStart:
+    - location: scripts/app_start.sh
+      timeout: 180
+  ApplicationStop:
+    - location: scripts/app_stop.sh
+      timeout: 180
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 180
+
