@@ -7,8 +7,8 @@ files:
 permissions:
   - object: /var/www/html/aac-app/scripts
     pattern: "*.sh"
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: 755
     type:
       - file
