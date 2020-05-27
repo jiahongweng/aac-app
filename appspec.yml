@@ -7,8 +7,8 @@ files:
 permissions:
   - object: /var/www/html/aac-app/scripts
     pattern: "*.sh"
-    owner: ubuntu
-    group: ubuntu
+    owner: root
+    group: root
     mode: 755
     type:
       - file
@@ -16,6 +16,7 @@ hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
       timeout: 180
+      runas: ubuntu
   AfterInstall:
     - location: scripts/after_install.sh
       timeout: 180
@@ -23,10 +24,13 @@ hooks:
   ApplicationStart:
     - location: scripts/app_start.sh
       timeout: 180
+      runas: ubuntu
   ApplicationStop:
     - location: scripts/app_stop.sh
       timeout: 180
+      runas: ubuntu
   ValidateService:
     - location: scripts/validate_service.sh
       timeout: 180
+      runas: ubuntu
 
