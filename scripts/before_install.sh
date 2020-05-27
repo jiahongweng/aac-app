@@ -18,5 +18,5 @@ else
     mkdir -p /var/www/html/aac-app
 fi
 
-sudo chown ubuntu:ubuntu -R /var/www/html/aac-app
+chown ubuntu:ubuntu -R /var/www/html/aac-app
 
