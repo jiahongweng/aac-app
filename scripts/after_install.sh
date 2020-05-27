@@ -7,6 +7,7 @@ which nvm
 which npm
 which node
 
+. /home/ubuntu/.nvm/nvm.sh
 source /home/ubuntu/.bashrc
 
 which nvm
