@@ -4,5 +4,6 @@
 cd /var/www/html/aac-app
 
 . /home/ubuntu/.nvm/nvm.sh
+source /home/ubuntu/.bashrc
 
 npm install

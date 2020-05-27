@@ -1,7 +1,3 @@
-listenCount=$(netstat -an | grep 3000 | grep LISTEN | wc -l)
-
-if [ "$listenCount" -lt 1 ]; then
-  exit 1
-else
-  exit 0
-fi
+#!/usr/bin/env bash
+sleep 10
+nc -zv 127.0.0.1 3000
